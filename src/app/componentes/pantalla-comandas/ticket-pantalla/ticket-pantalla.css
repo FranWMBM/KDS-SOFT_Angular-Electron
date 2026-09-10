@@ -1,75 +1,138 @@
 /* =========================
+   CONTENEDOR EXTERIOR
+   ========================= */
+
+.seleccion,
+.noseleccion {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+.seleccion {
+  border: clamp(2px, 0.25vw, 5px) solid blue;
+}
+
+.noseleccion {
+  border: 0;
+}
+
+
+/* =========================
    COMANDA
    ========================= */
 
 .comanda {
+  width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background: #fff;
-}
 
-.contenedor-filas {
-  flex: 1;
+  min-width: 0;
   min-height: 0;
 
+  /*
+    Mejor Grid que Flex para este caso:
+
+    encabezado
+    productos
+    botón
+  */
   display: grid;
-  grid-template-rows: repeat(20, minmax(0, 1fr));
+
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  background: #fff;
 
   overflow: hidden;
 }
 
 
-/* Cabecera de la comanda */
-.comanda-header {
+/* =========================
+   FILAS DE PRODUCTOS
+   ========================= */
 
-    display: flex;
+.contenedor-filas {
+  width: 100%;
+  height: 100%;
 
-    justify-content: space-between;
+  min-width: 0;
+  min-height: 0;
 
-    align-items: center;
+  display: grid;
 
-    margin-bottom: 10px;
+  /*
+    Exactamente 20 espacios iguales.
+  */
+  grid-template-rows:
+    repeat(20, minmax(0, 1fr));
+
+  overflow: hidden;
 }
 
+
+/*
+  Muy importante porque app-fila-producto
+  es un elemento hijo del grid.
+*/
+app-fila-producto {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+
+/* =========================
+   CABECERA
+   ========================= */
+
+.comanda-header {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  /*
+    Evitamos margin-bottom porque suma
+    espacio fuera del elemento.
+  */
+  padding-bottom: clamp(3px, 0.4vh, 8px);
+
+  min-height: 0;
+}
 
 .numero {
-    font-size: 22px;
-    font-weight: bold;
+  font-size: clamp(14px, 1.2vw, 22px);
+  font-weight: bold;
 }
-
 
 .hora {
-    font-size: 16px;
-    color: #666;
+  font-size: clamp(11px, 0.9vw, 16px);
+  color: #666;
 }
 
+
+/* =========================
+   OTROS TEXTOS
+   ========================= */
 
 .comanda h3 {
-    font-size: 20px;
+  font-size: clamp(13px, 1.1vw, 20px);
 
-    margin-bottom: 15px;
+  margin: 0;
 
-    border-bottom: 1px solid #ccc;
+  padding-bottom: clamp(3px, 0.4vh, 8px);
 
-    padding-bottom: 8px;
-}
-
-
-.contenedor-filas {
-  display: grid;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* Productos */
-
-.seleccion{
-  border: 5px solid blue;
-}
-
-.noseleccion{
-  border: 0px;
+  border-bottom: 1px solid #ccc;
 }

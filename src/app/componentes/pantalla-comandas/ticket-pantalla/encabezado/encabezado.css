@@ -2,142 +2,196 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  padding: 30px;
-  background: #eeeeee;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 /* =====================================
-           ENCABEZADO DE LA COMANDA
-        ===================================== */
+   ENCABEZADO DE LA COMANDA
+   ===================================== */
 
-.encabezado-comanda {
+:host {
+  display: block;
+
   width: 100%;
-  background: white;
 
-  border: 1px solid #222;
-  /* border-radius: 10px; */
+  min-width: 0;
+  min-height: 0;
 
   overflow: hidden;
 }
 
+.encabezado-comanda {
+  width: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  background: white;
+
+  border: clamp(1px, 0.06vw, 2px) solid #222;
+
+  overflow: hidden;
+}
+
+
 /* =====================================
-           FILA PRINCIPAL
-        ===================================== */
+   FILA PRINCIPAL
+   ===================================== */
 
 .encabezado-principal {
   display: flex;
+
   justify-content: space-between;
   align-items: center;
 
-  padding: 12px 16px;
+  padding:
+    clamp(4px, 0.55vh, 10px)
+    clamp(6px, 0.7vw, 14px);
 
   background: #222;
   color: white;
+
+  min-width: 0;
 }
 
+
 /* =====================================
-           FOLIO
-        ===================================== */
+   FOLIO
+   ===================================== */
 
 .folio {
   display: flex;
   flex-direction: column;
 
-  gap: 2px;
+  gap: clamp(1px, 0.15vh, 3px);
+
+  min-width: 0;
 }
 
 .folio-label {
-  font-size: 12px;
+  font-size: clamp(8px, 0.55vw, 12px);
+
   font-weight: bold;
 
   color: #bbbbbb;
 
   text-transform: uppercase;
+
+  line-height: 1;
 }
 
 .folio-numero {
-  font-size: 28px;
+  font-size: clamp(16px, 1.45vw, 28px);
+
   font-weight: bold;
+
+  line-height: 1;
 }
 
+
 /* =====================================
-           MESA
-        ===================================== */
+   MESA
+   ===================================== */
 
 .mesa {
   text-align: right;
+
+  min-width: 0;
 }
 
 .mesa-label {
-  font-size: 12px;
+  font-size: clamp(8px, 0.55vw, 12px);
+
   color: #bbbbbb;
 
   text-transform: uppercase;
+
+  line-height: 1;
 }
 
 .mesa-numero {
-  font-size: 28px;
+  font-size: clamp(16px, 1.45vw, 28px);
+
   font-weight: bold;
+
+  line-height: 1;
 }
 
+
 /* =====================================
-           INFORMACIÓN SECUNDARIA
-        ===================================== */
+   INFORMACIÓN SECUNDARIA
+   ===================================== */
 
 .encabezado-secundario {
   display: flex;
 
   align-items: center;
-
   justify-content: space-between;
 
-  padding: 9px 16px;
+  gap: clamp(4px, 0.4vw, 8px);
+
+  padding:
+    clamp(3px, 0.4vh, 8px)
+    clamp(6px, 0.7vw, 14px);
 
   background: #f5f5f5;
 
   border-top: 1px solid #ddd;
+
+  min-width: 0;
 }
 
+
 /* =====================================
-           MESERO
-        ===================================== */
+   MESERO
+   ===================================== */
 
 .mesero {
   display: flex;
 
   align-items: center;
 
-  gap: 8px;
+  gap: clamp(3px, 0.35vw, 8px);
 
-  font-size: 17px;
+  font-size: clamp(10px, 0.8vw, 17px);
 
   font-weight: bold;
 
   color: #333;
+
+  min-width: 0;
+
+  overflow: hidden;
 }
 
 .icono-mesero {
-  font-size: 20px;
+  font-size: clamp(12px, 1vw, 20px);
+
+  flex-shrink: 0;
 }
 
+
 /* =====================================
-           TIPO DE CUENTA
-        ===================================== */
+   TIPO DE CUENTA
+   ===================================== */
 
 .tipo-cuenta {
-  padding: 5px 12px;
+  padding:
+    clamp(2px, 0.25vh, 5px)
+    clamp(5px, 0.55vw, 12px);
 
-  border-radius: 15px;
+  border-radius: clamp(8px, 0.75vw, 15px);
 
-  font-size: 14px;
+  font-size: clamp(9px, 0.65vw, 14px);
 
   font-weight: bold;
 
   text-transform: uppercase;
+
+  line-height: 1;
+
+  white-space: nowrap;
+
+  flex-shrink: 0;
 }
+
 
 /* Comedor */
 
@@ -146,6 +200,7 @@ body {
   color: #1b5e20;
 }
 
+
 /* Domicilio */
 
 .tipo-domicilio {
@@ -153,32 +208,10 @@ body {
   color: #856404;
 }
 
+
 /* Rápido */
 
 .tipo-rapido {
   background: #dbeafe;
   color: #1e40af;
-}
-
-/* =====================================
-           RESPONSIVE
-        ===================================== */
-
-@media (max-width: 500px) {
-  .encabezado-principal {
-    padding: 10px;
-  }
-
-  .folio-numero,
-  .mesa-numero {
-    font-size: 22px;
-  }
-
-  .encabezado-secundario {
-    padding: 8px 10px;
-  }
-
-  .mesero {
-    font-size: 14px;
-  }
 }

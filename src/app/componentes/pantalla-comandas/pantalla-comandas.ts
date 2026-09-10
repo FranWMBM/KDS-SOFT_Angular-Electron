@@ -3,10 +3,11 @@ import { TicketPantalla } from './ticket-pantalla/ticket-pantalla';
 import { ComandasService } from '../../servicios/ComandasService';
 import { ProductoMonitor } from '../../interfaces/productosenproduccion';
 import { ComandaModel } from '../../interfaces/comanda';
+import { BumpBar } from "../bump-bar/bump-bar";
 
 @Component({
   selector: 'app-pantalla-comandas',
-  imports: [TicketPantalla],
+  imports: [TicketPantalla, BumpBar],
   templateUrl: './pantalla-comandas.html',
   styleUrl: './pantalla-comandas.css',
 })
@@ -2084,7 +2085,7 @@ export class PantallaComandas {
       }
     ];
 
-    //this.srvComandas.AgregarRegistros(dev);
+    this.srvComandas.AgregarRegistros(dev);
   }
 
   onProductoSeleccionado(idProducto: ComandaModel) {

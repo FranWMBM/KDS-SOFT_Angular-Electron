@@ -1,0 +1,184 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 30px;
+  background: #eeeeee;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* =====================================
+           ENCABEZADO DE LA COMANDA
+        ===================================== */
+
+.encabezado-comanda {
+  width: 100%;
+  background: white;
+
+  border: 1px solid #222;
+  /* border-radius: 10px; */
+
+  overflow: hidden;
+}
+
+/* =====================================
+           FILA PRINCIPAL
+        ===================================== */
+
+.encabezado-principal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px 16px;
+
+  background: #222;
+  color: white;
+}
+
+/* =====================================
+           FOLIO
+        ===================================== */
+
+.folio {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.folio-label {
+  font-size: 12px;
+  font-weight: bold;
+
+  color: #bbbbbb;
+
+  text-transform: uppercase;
+}
+
+.folio-numero {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* =====================================
+           MESA
+        ===================================== */
+
+.mesa {
+  text-align: right;
+}
+
+.mesa-label {
+  font-size: 12px;
+  color: #bbbbbb;
+
+  text-transform: uppercase;
+}
+
+.mesa-numero {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* =====================================
+           INFORMACIÓN SECUNDARIA
+        ===================================== */
+
+.encabezado-secundario {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 9px 16px;
+
+  background: #f5f5f5;
+
+  border-top: 1px solid #ddd;
+}
+
+/* =====================================
+           MESERO
+        ===================================== */
+
+.mesero {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 17px;
+
+  font-weight: bold;
+
+  color: #333;
+}
+
+.icono-mesero {
+  font-size: 20px;
+}
+
+/* =====================================
+           TIPO DE CUENTA
+        ===================================== */
+
+.tipo-cuenta {
+  padding: 5px 12px;
+
+  border-radius: 15px;
+
+  font-size: 14px;
+
+  font-weight: bold;
+
+  text-transform: uppercase;
+}
+
+/* Comedor */
+
+.tipo-comedor {
+  background: #d8f3dc;
+  color: #1b5e20;
+}
+
+/* Domicilio */
+
+.tipo-domicilio {
+  background: #fff3cd;
+  color: #856404;
+}
+
+/* Rápido */
+
+.tipo-rapido {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* =====================================
+           RESPONSIVE
+        ===================================== */
+
+@media (max-width: 500px) {
+  .encabezado-principal {
+    padding: 10px;
+  }
+
+  .folio-numero,
+  .mesa-numero {
+    font-size: 22px;
+  }
+
+  .encabezado-secundario {
+    padding: 8px 10px;
+  }
+
+  .mesero {
+    font-size: 14px;
+  }
+}

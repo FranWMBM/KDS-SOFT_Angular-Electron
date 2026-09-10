@@ -1,0 +1,103 @@
+<div class="marca-agua">
+  <img src="imagenes/logo.png" alt="Logo" />
+</div>
+<div class="kds">
+  <!-- FILA 1: ENCABEZADO -->
+  <header class="encabezado">
+    <div class="nombre-area">EXPO</div>
+
+    <div class="total-comandas">
+      Comandas en preparación:
+      <span>5</span>
+    </div>
+  </header>
+
+  <!-- FILA 2: ÁREA DE COMANDAS -->
+  <main
+    class="area-comandas"
+    [style.grid-template-columns]="'repeat(' + columnas() + ', 1fr)'"
+    [style.grid-template-rows]="'repeat(' + filas() + ', 1fr)'"
+  >
+    @for (ticket of srvComandas.columnasVisibles(); track $index) {
+      <app-ticket-pantalla
+        [columna]="ticket.columna"
+        [comanda]="ticket.comanda"
+        [seleccionado]="ticket.columna.seleccionado()"
+        (productoSeleccionado)="onProductoSeleccionado($event)"
+      />
+    }
+  </main>
+
+  <!-- FILA 3: BUMP BAR
+  <footer class="bump-bar">
+    <button class="btn-bump">BUMP</button>
+    <span>
+
+    Página
+    {{ srvComandas.paginaActual() + 1 }}
+
+    de
+
+    {{ srvComandas.totalPaginas() }}
+
+  </span>
+  </footer> -->
+
+  <div class="BumpBar">
+    <!-- <button (click)="srvComandas.paginaAnterior()" [disabled]="srvComandas.paginaActual() === 0">
+
+      Anterior
+
+    </button>
+
+
+    <span>
+
+      Página
+      {{ srvComandas.paginaActual() + 1 }}
+
+      de
+
+      {{ srvComandas.totalPaginas() }}
+
+    </span>
+
+
+    <button (click)="srvComandas.siguientePagina()" [disabled]="
+      srvComandas.paginaActual()
+      >= srvComandas.totalPaginas() - 1
+    ">
+
+      Siguiente
+
+    </button> -->
+
+    <button class="boton">
+      <span>Bump</span>
+    </button>
+
+    <button class="boton" (click)="srvComandas.comandaAnterior()">
+      <img src="imagenes/Anterior_Columna.png" alt="Nota" />
+    </button>
+
+    <button class="boton" (click)="srvComandas.comandaSiguiente()">
+      <img src="imagenes/Siguiente_Columna.png" alt="Nota" />
+    </button>
+
+    <button
+      class="boton"
+      (click)="srvComandas.paginaAnterior()"
+      [disabled]="srvComandas.paginaActual() === 0"
+    >
+      <img src="imagenes/Anterior_Pagina.png" alt="Nota" />
+    </button>
+
+    <button
+      class="boton"
+      (click)="srvComandas.siguientePagina()"
+      [disabled]="srvComandas.paginaActual() >= srvComandas.totalPaginas() - 1"
+    >
+      <img src="imagenes/Siguiente_Pagina.png" alt="Nota" />
+    </button>
+  </div>
+</div>

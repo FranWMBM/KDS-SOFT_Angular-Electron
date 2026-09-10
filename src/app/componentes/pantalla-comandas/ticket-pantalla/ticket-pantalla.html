@@ -1,0 +1,15 @@
+<div [ngClass]="seleccionado() ? 'seleccion' : 'noseleccion'">
+  <div class="comanda">
+    @if (columna()?.esPrimera) {
+      <app-encabezado [folio]="comanda().id_comanda" />
+    }
+
+    <div class="contenedor-filas" [style.grid-template-rows]="'repeat(20, 1fr)'">
+      @for (prod of columna()?.displays; track $index) {
+        <app-fila-producto [datos]="prod" />
+      }
+    </div>
+
+    <button (click)="seleccionarProducto()">Seleccionar</button>
+  </div>
+</div>

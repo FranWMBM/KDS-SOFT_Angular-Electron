@@ -1,0 +1,75 @@
+/* =========================
+   COMANDA
+   ========================= */
+
+.comanda {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #fff;
+}
+
+.contenedor-filas {
+  flex: 1;
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows: repeat(20, minmax(0, 1fr));
+
+  overflow: hidden;
+}
+
+
+/* Cabecera de la comanda */
+.comanda-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 10px;
+}
+
+
+.numero {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+
+.hora {
+    font-size: 16px;
+    color: #666;
+}
+
+
+.comanda h3 {
+    font-size: 20px;
+
+    margin-bottom: 15px;
+
+    border-bottom: 1px solid #ccc;
+
+    padding-bottom: 8px;
+}
+
+
+.contenedor-filas {
+  display: grid;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Productos */
+
+.seleccion{
+  border: 5px solid blue;
+}
+
+.noseleccion{
+  border: 0px;
+}

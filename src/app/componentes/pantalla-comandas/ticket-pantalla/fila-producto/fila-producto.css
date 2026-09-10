@@ -1,0 +1,29 @@
+.principal {
+    margin: 0px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    font-family: Arial;
+}
+
+.comentario {
+    margin-top: 13px;
+    background: #A9A9A9;
+    border-left: 4px solid #e5b93f;
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #000000;
+    font-size: 14px;
+    font-style: italic;
+    margin: 0px 20px;
+    font-family: Arial;
+}
+
+.separador {
+    border-top: 2px dashed #555;
+}

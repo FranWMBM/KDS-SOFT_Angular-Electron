@@ -1,26 +1,47 @@
 /* =========================
-   CONTENEDOR EXTERIOR
+   HOST
    ========================= */
 
-.seleccion,
-.noseleccion {
+:host {
+  display: block;
+
   width: 100%;
   height: 100%;
 
   min-width: 0;
   min-height: 0;
 
-  box-sizing: border-box;
-
   overflow: hidden;
 }
 
-.seleccion {
-  border: clamp(2px, 0.25vw, 5px) solid blue;
+
+/* =========================
+   TICKET EXTERIOR
+   ========================= */
+
+.ticket {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+
+  background: #fff;
+
+  box-sizing: border-box;
 }
 
-.noseleccion {
-  border: 0;
+
+/* =========================
+   SELECCIÓN
+   ========================= */
+
+.ticket.seleccion {
+  border:
+    clamp(2px, 0.25vw, 5px)
+    solid blue;
 }
 
 
@@ -35,19 +56,14 @@
   min-width: 0;
   min-height: 0;
 
-  /*
-    Mejor Grid que Flex para este caso:
-
-    encabezado
-    productos
-    botón
-  */
   display: grid;
 
+  /*
+    TODO el ticket está dividido
+    exactamente en 20 espacios.
+  */
   grid-template-rows:
-    auto
-    minmax(0, 1fr)
-    auto;
+    repeat(20, minmax(0, 1fr));
 
   background: #fff;
 
@@ -56,35 +72,36 @@
 
 
 /* =========================
-   FILAS DE PRODUCTOS
+   PRIMERA COLUMNA
    ========================= */
 
-.contenedor-filas {
+/*
+  El encabezado utiliza exactamente
+  2 de las 20 filas.
+*/
+.comanda.primera .encabezado-ticket {
+  grid-row: span 2;
+
   width: 100%;
   height: 100%;
 
   min-width: 0;
   min-height: 0;
-
-  display: grid;
-
-  /*
-    Exactamente 20 espacios iguales.
-  */
-  grid-template-rows:
-    repeat(20, minmax(0, 1fr));
 
   overflow: hidden;
 }
 
 
 /*
-  Muy importante porque app-fila-producto
-  es un elemento hijo del grid.
+  Quedan 18 espacios para productos.
 */
-app-fila-producto {
-  width: 100%;
-  height: 100%;
+.comanda.primera .contenedor-filas {
+  grid-row: span 18;
+
+  display: grid;
+
+  grid-template-rows:
+    repeat(18, minmax(0, 1fr));
 
   min-width: 0;
   min-height: 0;
@@ -94,45 +111,40 @@ app-fila-producto {
 
 
 /* =========================
-   CABECERA
+   COLUMNA CONTINUACIÓN
    ========================= */
 
-.comanda-header {
-  display: flex;
+/*
+  Al no existir encabezado,
+  dispone de los 20 espacios.
+*/
+.comanda.continuacion .contenedor-filas {
+  grid-row: span 20;
 
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
 
-  /*
-    Evitamos margin-bottom porque suma
-    espacio fuera del elemento.
-  */
-  padding-bottom: clamp(3px, 0.4vh, 8px);
+  grid-template-rows:
+    repeat(20, minmax(0, 1fr));
 
+  min-width: 0;
   min-height: 0;
-}
 
-.numero {
-  font-size: clamp(14px, 1.2vw, 22px);
-  font-weight: bold;
-}
-
-.hora {
-  font-size: clamp(11px, 0.9vw, 16px);
-  color: #666;
+  overflow: hidden;
 }
 
 
 /* =========================
-   OTROS TEXTOS
+   FILA PRODUCTO ANGULAR
    ========================= */
 
-.comanda h3 {
-  font-size: clamp(13px, 1.1vw, 20px);
+app-fila-producto {
+  display: block;
 
-  margin: 0;
+  width: 100%;
+  height: 100%;
 
-  padding-bottom: clamp(3px, 0.4vh, 8px);
+  min-width: 0;
+  min-height: 0;
 
-  border-bottom: 1px solid #ccc;
+  overflow: hidden;
 }

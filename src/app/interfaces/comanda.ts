@@ -1,3 +1,5 @@
+import { inject } from '@angular/core';
+import { ConfigService } from '../servicios/ConfigService';
 import { Columna, ColumnaModel } from './columna';
 import { ProductoMonitor } from './productosenproduccion';
 
@@ -11,22 +13,20 @@ export class ComandaModel implements Comanda {
   id_comanda: number;
   productos: number[];
   tickets: ColumnaModel[];
-
+  filas = 20;
   columnaActual: ColumnaModel;
 
-  constructor(registro: ProductoMonitor) {
+  constructor(registro: ProductoMonitor, filas: number) {
     this.id_comanda = registro.folio;
-
+    this.filas = filas;
     this.productos = [registro.movimiento];
-
     this.columnaActual = this.crearColumna(true);
     this.tickets = [this.columnaActual];
     this.columnaActual.agregarProducto(registro);
   }
 
   private crearColumna(primera: boolean): ColumnaModel {
-    const columna = new ColumnaModel();
-    columna.esPrimera = primera;
+    const columna = new ColumnaModel(primera, this.filas);
     return columna;
   }
 

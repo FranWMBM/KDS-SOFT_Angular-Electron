@@ -1,14 +1,16 @@
-<div>
+<div class="fila">
+
   @if (datos()?.tipo === 'principal') {
     <div class="separador"></div>
   }
+
   <div
     [ngClass]="{
       'principal': datos()?.tipo === 'principal',
       'comentario': datos()?.tipo === 'comentario'
     }"
   >
-    <!-- {{ datos()?.movimiento }} - {{ datos()?.descripcion }} -->
-    {{ datos()?.descripcion }}
+   [{{ datos()?.movimiento }}] {{ datos()?.descripcion }}
   </div>
+
 </div>

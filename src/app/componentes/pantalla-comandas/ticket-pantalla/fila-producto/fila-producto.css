@@ -1,29 +1,134 @@
-.principal {
-    margin: 0px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #000;
-    font-family: Arial;
+:host {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
 }
+
+* {
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   CONTENEDOR GENERAL
+   ========================= */
+
+.fila {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: flex-start;
+
+  overflow: hidden;
+}
+
+
+/* =========================
+   PRODUCTO PRINCIPAL
+   ========================= */
+
+.principal {
+  width: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  margin: 0;
+
+  padding:
+    0
+    clamp(4px, 0.55vw, 10px);
+
+  display: flex;
+  align-items: center;
+
+  font-size: clamp(10px, 0.85vw, 18px);
+
+  font-weight: bold;
+
+  color: #000;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  line-height: 1;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   COMENTARIO
+   ========================= */
 
 .comentario {
-    margin-top: 13px;
-    background: #A9A9A9;
-    border-left: 4px solid #e5b93f;
-    border-radius: 4px;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    color: #000000;
-    font-size: 14px;
-    font-style: italic;
-    margin: 0px 20px;
-    font-family: Arial;
+  width: calc(100% - clamp(10px, 1.2vw, 24px));
+
+  min-width: 0;
+  min-height: 0;
+
+  margin:
+    0
+    clamp(5px, 0.6vw, 12px);
+
+  padding:
+    clamp(1px, 0.15vh, 3px)
+    clamp(3px, 0.35vw, 7px);
+
+  background: #a9a9a9;
+
+  border-left:
+    clamp(2px, 0.2vw, 4px)
+    solid
+    #e5b93f;
+
+  border-radius:
+    clamp(2px, 0.25vw, 4px);
+
+  display: flex;
+
+  align-items: center;
+
+  color: #000;
+
+  font-size: clamp(8px, 0.7vw, 14px);
+
+  font-style: italic;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  line-height: 1;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
 }
 
+
+/* =========================
+   SEPARADOR
+   ========================= */
+
 .separador {
-    border-top: 2px dashed #555;
+  width: 100%;
+
+  flex-shrink: 0;
+
+  border-top:
+    clamp(1px, 0.1vw, 2px)
+    dashed
+    #555;
 }

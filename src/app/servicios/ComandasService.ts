@@ -1,19 +1,18 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { ComandaModel } from '../interfaces/comanda';
 import { ProductoMonitor } from '../interfaces/productosenproduccion';
+import { ConfigService } from './ConfigService';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ComandasService {
   // seleccionado? : ComandaModel = undefined;
-
+  svrConfig = inject(ConfigService);
   private _comandas = signal<ComandaModel[]>([]);
   readonly comandas = this._comandas.asReadonly();
   private _paginaActual = signal(0);
   readonly paginaActual = this._paginaActual.asReadonly();
-
-  columnasPorPagina = 6;
 
   constructor() {
 
@@ -50,13 +49,13 @@ export class ComandasService {
   readonly totalPaginas = computed(() => {
     const totalColumnas = this.todasLasColumnas().length;
 
-    return Math.ceil(totalColumnas / this.columnasPorPagina);
+    return Math.ceil(totalColumnas / this.svrConfig.columnasPorPagina);
   });
 
   readonly columnasVisibles = computed(() => {
-    const inicio = this._paginaActual() * this.columnasPorPagina;
+    const inicio = this._paginaActual() * this.svrConfig.columnasPorPagina;
 
-    return this.todasLasColumnas().slice(inicio, inicio + this.columnasPorPagina);
+    return this.todasLasColumnas().slice(inicio, inicio + this.svrConfig.columnasPorPagina);
   });
 
   // AgregarRegistros(registros: ProductoMonitor[]) {
@@ -117,7 +116,7 @@ export class ComandasService {
         );
 
         if (!comanda) {
-          comanda = new ComandaModel(producto);
+          comanda = new ComandaModel(producto, this.svrConfig.filasPorTicket);
           comandas.push(comanda);
         } else {
           comanda.agregarProducto(producto);

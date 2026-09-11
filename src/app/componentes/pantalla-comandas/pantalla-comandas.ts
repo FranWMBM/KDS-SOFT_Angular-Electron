@@ -4,6 +4,7 @@ import { ComandasService } from '../../servicios/ComandasService';
 import { ProductoMonitor } from '../../interfaces/productosenproduccion';
 import { ComandaModel } from '../../interfaces/comanda';
 import { BumpBar } from "../bump-bar/bump-bar";
+import { ConfigService } from '../../servicios/ConfigService';
 
 @Component({
   selector: 'app-pantalla-comandas',
@@ -12,9 +13,8 @@ import { BumpBar } from "../bump-bar/bump-bar";
   styleUrl: './pantalla-comandas.css',
 })
 export class PantallaComandas {
-  columnas = input(6);
-  filas = input(1);
-
+  
+  svrConfig = inject(ConfigService);
   srvComandas = inject(ComandasService);
   comandas = this.srvComandas.comandas;
 

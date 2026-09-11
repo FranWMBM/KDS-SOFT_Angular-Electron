@@ -1,5 +1,6 @@
-import { signal, Signal } from '@angular/core';
+import { inject, signal, Signal } from '@angular/core';
 import { ProductoMonitor } from './productosenproduccion';
+import { ConfigService } from '../servicios/ConfigService';
 
 export interface Columna {
   esPrimera: boolean;
@@ -14,12 +15,20 @@ export interface Display {
   movimiento: number;
 }
 
-export class ColumnaModel implements Columna {
+export class ColumnaModel{
   esPrimera = true;
   cantidadFilas = 20;
   displays: Display[] = [];
   completada = false;
   seleccionado = signal(false);
+
+  constructor(esPrimera: boolean, filas: number) {
+    this.esPrimera = esPrimera;
+    this.cantidadFilas = filas;
+    if(esPrimera === true){
+      this.cantidadFilas = this.cantidadFilas - 2;
+    }
+  }
 
   agregarProducto(producto: ProductoMonitor): Display[] {
     const displayProducto: Display = {

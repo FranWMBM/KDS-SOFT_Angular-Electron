@@ -7,7 +7,7 @@ import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-ticket-pantalla',
-  imports: [FilaProducto, Encabezado, NgClass],
+  imports: [FilaProducto, Encabezado],
   templateUrl: './ticket-pantalla.html',
   styleUrl: './ticket-pantalla.css',
 })

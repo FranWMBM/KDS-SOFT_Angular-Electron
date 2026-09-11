@@ -1,30 +1,24 @@
-<div [ngClass]="seleccionado() ? 'seleccion' : 'noseleccion'">
-
-  <div class="comanda">
-
+<div class="ticket" [class.seleccion]="seleccionado()">
+  <div
+    class="comanda"
+    [class.primera]="columna()?.esPrimera"
+    [class.continuacion]="!columna()?.esPrimera"
+    [style.grid-template-rows]="
+      'repeat(' + (columna()!.cantidadFilas + (columna()!.esPrimera ? 2 : 0)) + ', minmax(0, 1fr))'
+    "
+  >
     @if (columna()?.esPrimera) {
-      <app-encabezado
-        [folio]="comanda().id_comanda"
-      />
+      <app-encabezado class="encabezado-ticket" [folio]="comanda().id_comanda" />
     }
 
-    <div class="contenedor-filas">
-
-      @for (prod of columna()?.displays; track $index) {
-        <app-fila-producto
-          [datos]="prod"
-        />
-      }
-
-    </div>
-
-    <!-- <button
-      class="boton-seleccionar"
-      (click)="seleccionarProducto()"
+    <div
+      class="contenedor-filas"
+      [style.grid-row]="'span ' + columna()!.cantidadFilas"
+      [style.grid-template-rows]="'repeat(' + columna()!.cantidadFilas + ', minmax(0, 1fr))'"
     >
-      Seleccionar
-    </button> -->
-
+      @for (prod of columna()?.displays; track $index) {
+        <app-fila-producto [datos]="prod" />
+      }
+    </div>
   </div>
-
 </div>

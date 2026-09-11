@@ -15,8 +15,8 @@
   <!-- FILA 2: ÁREA DE COMANDAS -->
   <main
     class="area-comandas"
-    [style.grid-template-columns]="'repeat(' + columnas() + ', 1fr)'"
-    [style.grid-template-rows]="'repeat(' + filas() + ', 1fr)'"
+    [style.grid-template-columns]="'repeat(' + svrConfig.columnas + ', 1fr)'"
+    [style.grid-template-rows]="'repeat(' + svrConfig.filas + ', 1fr)'"
   >
     @for (ticket of srvComandas.columnasVisibles(); track $index) {
       <app-ticket-pantalla

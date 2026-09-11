@@ -2085,7 +2085,7 @@ export class PantallaComandas {
       }
     ];
 
-    this.srvComandas.AgregarRegistros(dev);
+    //this.srvComandas.AgregarRegistros(dev);
   }
 
   onProductoSeleccionado(idProducto: ComandaModel) {

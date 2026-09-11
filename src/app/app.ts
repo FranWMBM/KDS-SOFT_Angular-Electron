@@ -4,7 +4,7 @@ import { PantallaComandas } from "./componentes/pantalla-comandas/pantalla-coman
 
 @Component({
   selector: 'app-root',
-  imports: [PantallaComandas],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -16,18 +16,18 @@ export class ComandasService {
 
   constructor() {
 
-    // window.electronAPI.onNuevosRegistros(
-    //   (registros: ProductoMonitor[]) => {
+    window.electronAPI.onNuevosRegistros(
+      (registros: ProductoMonitor[]) => {
 
-    //     console.log(
-    //       'Angular recibió nuevos registros:',
-    //       registros
-    //     );
+        console.log(
+          'Angular recibió nuevos registros:',
+          registros
+        );
 
-    //     this.AgregarRegistros(registros);
+        this.AgregarRegistros(registros);
 
-    //   }
-    // );
+      }
+    );
 
   }
 

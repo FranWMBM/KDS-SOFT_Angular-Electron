@@ -26,17 +26,9 @@
       Siguiente
 
     </button> -->
-
-  <button class="boton">
+  
+  <button class="bump">
     <span>Bump</span>
-  </button>
-
-  <button class="boton" (click)="srvComandas.comandaAnterior()">
-    <img src="imagenes/Anterior_Columna.png" alt="Nota" />
-  </button>
-
-  <button class="boton" (click)="srvComandas.comandaSiguiente()">
-    <img src="imagenes/Siguiente_Columna.png" alt="Nota" />
   </button>
 
   <button
@@ -47,11 +39,27 @@
     <img src="imagenes/Anterior_Pagina.png" alt="Nota" />
   </button>
 
+  <button class="boton" (click)="srvComandas.comandaAnterior()">
+    <img src="imagenes/Anterior_Columna.png" alt="Nota" />
+  </button>
+
+  <button class="boton" (click)="srvComandas.comandaSiguiente()">
+    <img src="imagenes/Siguiente_Columna.png" alt="Nota" />
+  </button>
+
+  
+
   <button
     class="boton"
     (click)="srvComandas.siguientePagina()"
     [disabled]="srvComandas.paginaActual() >= srvComandas.totalPaginas() - 1"
   >
     <img src="imagenes/Siguiente_Pagina.png" alt="Nota" />
+  </button>
+
+  <button
+    class="boton"
+    (click)="abrirConfiguracion()">
+    <img src="imagenes/config.png" alt="Nota" />
   </button>
 </div>

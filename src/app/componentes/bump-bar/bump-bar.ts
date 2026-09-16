@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { ComandasService } from '../../servicios/ComandasService';
 import { Router } from '@angular/router';
+import { NavegacionService } from '../../servicios/NavegacionService';
 
 @Component({
   selector: 'app-bump-bar',
@@ -9,8 +9,7 @@ import { Router } from '@angular/router';
   styleUrl: './bump-bar.css',
 })
 export class BumpBar {
-  srvComandas = inject(ComandasService);
-  comandas = this.srvComandas.comandas;
+  srvNavegacion = inject(NavegacionService);
 
   constructor(private router: Router) {}
 

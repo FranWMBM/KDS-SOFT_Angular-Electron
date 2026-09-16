@@ -13,50 +13,46 @@ export class ComandasService {
   readonly comandas = this._comandas.asReadonly();
   private _paginaActual = signal(0);
   readonly paginaActual = this._paginaActual.asReadonly();
+  public comandaSeleccionada?: ComandaModel;
 
   constructor() {
-
-    window.electronAPI.onNuevosRegistros(
-      (registros: ProductoMonitor[]) => {
-
-        console.log(
-          'Angular recibió nuevos registros:',
-          registros
-        );
-
-        this.AgregarRegistros(registros);
-
-      }
-    );
-
+    // window.electronAPI.onNuevosRegistros(
+    //   (registros: ProductoMonitor[]) => {
+    //     console.log(
+    //       'Angular recibió nuevos registros:',
+    //       registros
+    //     );
+    //     this.AgregarRegistros(registros);
+    //   }
+    // );
   }
 
   // readonly todasLasColumnas = computed(() => {
   //   return this._comandas().flatMap((comanda) => comanda.tickets);
   // });
 
-  readonly todasLasColumnas = computed(() => {
-    console.log("calculando columnas");
-    return this._comandas().flatMap((comanda) =>
-      comanda.tickets.map((columna, indice) => ({
-        comanda,
-        columna,
-        indiceColumna: indice,
-      })),
-    );
-  });
+  // readonly todasLasColumnas = computed(() => {
+  //   console.log("calculando columnas");
+  //   return this._comandas().flatMap((comanda) =>
+  //     comanda.tickets.map((columna, indice) => ({
+  //       comanda,
+  //       columna,
+  //       indiceColumna: indice,
+  //     })),
+  //   );
+  // });
 
-  readonly totalPaginas = computed(() => {
-    const totalColumnas = this.todasLasColumnas().length;
+  // readonly totalPaginas = computed(() => {
+  //   const totalColumnas = this.todasLasColumnas().length;
 
-    return Math.ceil(totalColumnas / this.svrConfig.columnasPorPagina);
-  });
+  //   return Math.ceil(totalColumnas / this.svrConfig.columnasPorPagina);
+  // });
 
-  readonly columnasVisibles = computed(() => {
-    const inicio = this._paginaActual() * this.svrConfig.columnasPorPagina;
+  // readonly columnasVisibles = computed(() => {
+  //   const inicio = this._paginaActual() * this.svrConfig.columnasPorPagina;
 
-    return this.todasLasColumnas().slice(inicio, inicio + this.svrConfig.columnasPorPagina);
-  });
+  //   return this.todasLasColumnas().slice(inicio, inicio + this.svrConfig.columnasPorPagina);
+  // });
 
   // AgregarRegistros(registros: ProductoMonitor[]) {
   //   // Agrupar los registros por folio
@@ -94,199 +90,222 @@ export class ComandasService {
   // }
 
   AgregarRegistros(registros: ProductoMonitor[]) {
-  const grupos = new Map<number, ProductoMonitor[]>();
+    const grupos = new Map<number, ProductoMonitor[]>();
 
-  for (const registro of registros) {
-    const idComanda = registro.folio;
+    for (const registro of registros) {
+      const idComanda = registro.folio;
 
-    if (!grupos.has(idComanda)) {
-      grupos.set(idComanda, []);
+      if (!grupos.has(idComanda)) {
+        grupos.set(idComanda, []);
+      }
+
+      grupos.get(idComanda)!.push(registro);
     }
 
-    grupos.get(idComanda)!.push(registro);
-  }
+    this._comandas.update((actual) => {
+      const comandas = [...actual];
 
-  this._comandas.update((actual) => {
-    const comandas = [...actual];
+      for (const productos of grupos.values()) {
+        for (const producto of productos) {
+          let comanda = comandas.find((comanda) => comanda.id_comanda === producto.folio);
 
-    for (const productos of grupos.values()) {
-      for (const producto of productos) {
-        let comanda = comandas.find(
-          (comanda) => comanda.id_comanda === producto.folio
-        );
-
-        if (!comanda) {
-          comanda = new ComandaModel(producto, this.svrConfig.filasPorTicket);
-          comandas.push(comanda);
-        } else {
-          comanda.agregarProducto(producto);
+          if (!comanda) {
+            comanda = new ComandaModel(producto, this.svrConfig.filasPorTicket);
+            comandas.push(comanda);
+          } else {
+            comanda.agregarProducto(producto);
+          }
         }
       }
+
+      if (!this.comandaSeleccionada) {
+        this.seleccionarComanda(comandas[0]);
+      }
+
+      // Si no hay ninguna comanda seleccionada,
+      // seleccionar la primera
+      // const haySeleccionada = comandas.some((comanda) =>
+      //   comanda.tickets.some((ticket) => ticket.seleccionado()),
+      // );
+
+      // if (!haySeleccionada && comandas.length > 0) {
+      //   const primeraComanda = comandas[0];
+
+      //   for (const ticket of primeraComanda.tickets) {
+      //     ticket.seleccionado.set(true);
+      //   }
+      // }
+
+      return comandas;
+    });
+  }
+
+  // siguientePagina(): void {
+  //   if (this._paginaActual() < this.totalPaginas() - 1) {
+  //     this._paginaActual.update((pagina) => pagina + 1);
+  //   }
+  // }
+
+  // paginaAnterior(): void {
+  //   if (this._paginaActual() > 0) {
+  //     this._paginaActual.update((pagina) => pagina - 1);
+  //   }
+  // }
+
+  // irAPagina(pagina: number): void {
+  //   if (pagina >= 0 && pagina < this.totalPaginas()) {
+  //     this._paginaActual.set(pagina);
+  //   }
+  // }
+
+  // primeraPagina(): void {
+  //   this._paginaActual.set(0);
+  // }
+
+  // ultimaPagina(): void {
+  //   const ultima = Math.max(0, this.totalPaginas() - 1);
+
+  //   this._paginaActual.set(ultima);
+  // }
+
+  // comandaAnterior(): void {
+  //   const visibles = this.columnasVisibles();
+
+  //   if (visibles.length === 0) {
+  //     return;
+  //   }
+
+  //   // Buscar la comanda actualmente seleccionada
+  //   const indiceActual = visibles.findIndex((item) => item.columna.seleccionado());
+
+  //   // Si no hay ninguna seleccionada, seleccionamos la primera
+  //   if (indiceActual === -1) {
+  //     this.seleccionarComanda(visibles[0].comanda);
+  //     return;
+  //   }
+
+  //   // Buscar la comanda anterior DIFERENTE
+  //   let indiceAnterior = indiceActual - 1;
+
+  //   while (
+  //     indiceAnterior >= 0 &&
+  //     visibles[indiceAnterior].comanda.id_comanda === visibles[indiceActual].comanda.id_comanda
+  //   ) {
+  //     indiceAnterior--;
+  //   }
+
+  //   // Existe una comanda anterior en la página actual
+  //   if (indiceAnterior >= 0) {
+  //     this.seleccionarComanda(visibles[indiceAnterior].comanda);
+  //     return;
+  //   }
+
+  //   // No hay anterior en esta página.
+  //   // Intentamos ir a la página anterior.
+  //   if (this._paginaActual() > 0) {
+  //     this._paginaActual.update((pagina) => pagina - 1);
+
+  //     const nuevaPagina = this.columnasVisibles();
+
+  //     if (nuevaPagina.length > 0) {
+  //       // Seleccionar la última comanda de la página anterior
+  //       this.seleccionarComanda(nuevaPagina[nuevaPagina.length - 1].comanda);
+  //     }
+  //   }
+  // }
+
+  // comandaSiguiente(): void {
+  //   console.log('siguiente');
+  //   const visibles = this.columnasVisibles();
+
+  //   if (visibles.length === 0) {
+  //     return;
+  //   }
+
+  //   // Buscar la comanda actualmente seleccionada
+  //   const indiceActual = visibles.findIndex((item) => item.columna.seleccionado());
+
+  //   // Si no hay ninguna seleccionada, seleccionamos la primera
+  //   if (indiceActual === -1) {
+  //     this.seleccionarComanda(visibles[0].comanda);
+  //     return;
+  //   }
+
+  //   // Buscar la siguiente comanda DIFERENTE
+  //   let indiceSiguiente = indiceActual + 1;
+
+  //   while (
+  //     indiceSiguiente < visibles.length &&
+  //     visibles[indiceSiguiente].comanda.id_comanda === visibles[indiceActual].comanda.id_comanda
+  //   ) {
+  //     indiceSiguiente++;
+  //   }
+
+  //   // Existe una comanda siguiente en la página actual
+  //   if (indiceSiguiente < visibles.length) {
+  //     this.seleccionarComanda(visibles[indiceSiguiente].comanda);
+  //     return;
+  //   }
+
+  //   // No hay siguiente en esta página.
+  //   // Intentamos ir a la siguiente página.
+  //   if (this._paginaActual() < this.totalPaginas() - 1) {
+  //     this._paginaActual.update((pagina) => pagina + 1);
+
+  //     const nuevaPagina = this.columnasVisibles();
+
+  //     if (nuevaPagina.length > 0) {
+  //       // Seleccionar la primera comanda de la siguiente página
+  //       this.seleccionarComanda(nuevaPagina[0].comanda);
+  //     }
+  //   }
+  // }
+
+  // private seleccionarComanda(comandaSeleccionada: ComandaModel): void {
+  //   this._comandas.update((comandas) => {
+  //     for (const comanda of comandas) {
+  //       const esLaSeleccionada = comanda.id_comanda === comandaSeleccionada.id_comanda;
+
+  //       // Recorrer todos los tickets de la comanda
+  //       for (const ticket of comanda.tickets) {
+  //         ticket.seleccionado.set(esLaSeleccionada);
+  //       }
+  //     }
+
+  //     return [...comandas];
+  //   });
+  // }
+
+  public seleccionarComanda(comanda: ComandaModel | undefined): void {
+    // if (this.comandaSeleccionada === comanda) {
+    //   return;
+    // }
+
+    this.actualizarSeleccion(this.comandaSeleccionada, false);
+
+    this.comandaSeleccionada = comanda;
+
+    this.actualizarSeleccion(this.comandaSeleccionada, true);
+  }
+
+  private actualizarSeleccion(comanda: ComandaModel | undefined, seleccionada: boolean): void {
+    if (!comanda) {
+      return;
     }
 
-    // Si no hay ninguna comanda seleccionada,
-    // seleccionar la primera
-    const haySeleccionada = comandas.some((comanda) =>
-      comanda.tickets.some((ticket) => ticket.seleccionado())
+    for (const ticket of comanda.tickets) {
+      ticket.seleccionado.set(seleccionada);
+    }
+  }
+
+  public Bump(): void {
+    const seleccionada = this.comandaSeleccionada;
+    if (!seleccionada) return;
+
+    this._comandas.update((comandas) =>
+      comandas.filter((comanda) => comanda.id_comanda !== seleccionada.id_comanda),
     );
 
-    if (!haySeleccionada && comandas.length > 0) {
-      const primeraComanda = comandas[0];
-
-      for (const ticket of primeraComanda.tickets) {
-        ticket.seleccionado.set(true)
-      }
-    }
-
-    return comandas;
-  });
-}
-
-  siguientePagina(): void {
-    if (this._paginaActual() < this.totalPaginas() - 1) {
-      this._paginaActual.update((pagina) => pagina + 1);
-    }
+    this.seleccionarComanda(undefined);
   }
-
-  paginaAnterior(): void {
-    if (this._paginaActual() > 0) {
-      this._paginaActual.update((pagina) => pagina - 1);
-    }
-  }
-
-  irAPagina(pagina: number): void {
-    if (pagina >= 0 && pagina < this.totalPaginas()) {
-      this._paginaActual.set(pagina);
-    }
-  }
-
-  primeraPagina(): void {
-    this._paginaActual.set(0);
-  }
-
-  ultimaPagina(): void {
-    const ultima = Math.max(0, this.totalPaginas() - 1);
-
-    this._paginaActual.set(ultima);
-  }
-
-  comandaAnterior(): void {
-  const visibles = this.columnasVisibles();
-
-  if (visibles.length === 0) {
-    return;
-  }
-
-  // Buscar la comanda actualmente seleccionada
-  const indiceActual = visibles.findIndex(
-    (item) => item.columna.seleccionado()
-  );
-
-  // Si no hay ninguna seleccionada, seleccionamos la primera
-  if (indiceActual === -1) {
-    this.seleccionarComanda(visibles[0].comanda);
-    return;
-  }
-
-  // Buscar la comanda anterior DIFERENTE
-  let indiceAnterior = indiceActual - 1;
-
-  while (
-    indiceAnterior >= 0 &&
-    visibles[indiceAnterior].comanda.id_comanda ===
-      visibles[indiceActual].comanda.id_comanda
-  ) {
-    indiceAnterior--;
-  }
-
-  // Existe una comanda anterior en la página actual
-  if (indiceAnterior >= 0) {
-    this.seleccionarComanda(visibles[indiceAnterior].comanda);
-    return;
-  }
-
-  // No hay anterior en esta página.
-  // Intentamos ir a la página anterior.
-  if (this._paginaActual() > 0) {
-    this._paginaActual.update((pagina) => pagina - 1);
-
-    const nuevaPagina = this.columnasVisibles();
-
-    if (nuevaPagina.length > 0) {
-      // Seleccionar la última comanda de la página anterior
-      this.seleccionarComanda(
-        nuevaPagina[nuevaPagina.length - 1].comanda
-      );
-    }
-  }
-}
-
-comandaSiguiente(): void {
-  console.log('siguiente');
-  const visibles = this.columnasVisibles();
-
-  if (visibles.length === 0) {
-    return;
-  }
-
-  // Buscar la comanda actualmente seleccionada
-  const indiceActual = visibles.findIndex(
-    (item) => item.columna.seleccionado()
-  );
-
-  // Si no hay ninguna seleccionada, seleccionamos la primera
-  if (indiceActual === -1) {
-    this.seleccionarComanda(visibles[0].comanda);
-    return;
-  }
-
-  // Buscar la siguiente comanda DIFERENTE
-  let indiceSiguiente = indiceActual + 1;
-
-  while (
-    indiceSiguiente < visibles.length &&
-    visibles[indiceSiguiente].comanda.id_comanda ===
-      visibles[indiceActual].comanda.id_comanda
-  ) {
-    indiceSiguiente++;
-  }
-
-  // Existe una comanda siguiente en la página actual
-  if (indiceSiguiente < visibles.length) {
-    this.seleccionarComanda(visibles[indiceSiguiente].comanda);
-    return;
-  }
-
-  // No hay siguiente en esta página.
-  // Intentamos ir a la siguiente página.
-  if (this._paginaActual() < this.totalPaginas() - 1) {
-    this._paginaActual.update((pagina) => pagina + 1);
-
-    const nuevaPagina = this.columnasVisibles();
-
-    if (nuevaPagina.length > 0) {
-      // Seleccionar la primera comanda de la siguiente página
-      this.seleccionarComanda(
-        nuevaPagina[0].comanda
-      );
-    }
-  }
-}
-
-private seleccionarComanda(comandaSeleccionada: ComandaModel): void {
-  this._comandas.update((comandas) => {
-    for (const comanda of comandas) {
-
-      const esLaSeleccionada =
-        comanda.id_comanda === comandaSeleccionada.id_comanda;
-
-      // Recorrer todos los tickets de la comanda
-      for (const ticket of comanda.tickets) {
-        ticket.seleccionado.set(esLaSeleccionada);
-      }
-    }
-
-    return [...comandas];
-  });
-}
 }

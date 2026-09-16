@@ -26,33 +26,31 @@
       Siguiente
 
     </button> -->
-  
-  <button class="bump">
+
+  <!-- <button class="bump">
     <span>Bump</span>
   </button>
 
   <button
     class="boton"
-    (click)="srvComandas.paginaAnterior()"
-    [disabled]="srvComandas.paginaActual() === 0"
+    (click)="srvNavegacion.paginaAnterior()"
+    [disabled]="srvNavegacion.paginaActual() === 0"
   >
     <img src="imagenes/Anterior_Pagina.png" alt="Nota" />
   </button>
 
-  <button class="boton" (click)="srvComandas.comandaAnterior()">
+  <button class="boton" (click)="srvNavegacion.comandaAnterior()">
     <img src="imagenes/Anterior_Columna.png" alt="Nota" />
   </button>
 
-  <button class="boton" (click)="srvComandas.comandaSiguiente()">
-    <img src="imagenes/Siguiente_Columna.png" alt="Nota" />
-  </button>
+  
 
   
 
   <button
     class="boton"
-    (click)="srvComandas.siguientePagina()"
-    [disabled]="srvComandas.paginaActual() >= srvComandas.totalPaginas() - 1"
+    (click)="srvNavegacion.siguientePagina()"
+    [disabled]="srvNavegacion.paginaActual() >= srvNavegacion.totalPaginas() - 1"
   >
     <img src="imagenes/Siguiente_Pagina.png" alt="Nota" />
   </button>
@@ -61,5 +59,34 @@
     class="boton"
     (click)="abrirConfiguracion()">
     <img src="imagenes/config.png" alt="Nota" />
+  </button> -->
+
+  <button
+    class="boton"
+    (click)="srvNavegacion.anteriorPagina()"
+    [disabled]="srvNavegacion.paginaActual() === 0"
+  >
+    <img src="imagenes/Anterior_Pagina.png" alt="Nota" />
+  </button>
+
+  <button class="boton" (click)="srvNavegacion.anteriorComanda()">
+    <img src="imagenes/Anterior_Columna.png" alt="Nota" />
+  </button>
+
+  <button class="boton" (click)="srvNavegacion.siguienteComanda()">
+    <img src="imagenes/Siguiente_Columna.png" alt="Nota" />
+  </button>
+
+  <button
+    class="boton"
+    (click)="srvNavegacion.siguientePagina()"
+    [disabled]="srvNavegacion.paginaActual() >= srvNavegacion.totalPaginas() - 1"
+  >
+    <img src="imagenes/Siguiente_Pagina.png" alt="Nota" />
+  </button>
+
+  <button class="bump" (click)="srvNavegacion.Bump()"
+  [disabled]="srvNavegacion.seleccion === undefined">
+    <span>Bump</span>
   </button>
 </div>

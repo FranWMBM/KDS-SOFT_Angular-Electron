@@ -5,8 +5,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ConfigService {
-  filasPorTicket = 10;
+  filasPorTicket = 15;
   columnas = 6;
-  filas = 2;
+  filas = 1;
   columnasPorPagina = this.columnas * this.filas;
 }

@@ -5,6 +5,7 @@ import { ProductoMonitor } from '../../interfaces/productosenproduccion';
 import { ComandaModel } from '../../interfaces/comanda';
 import { BumpBar } from "../bump-bar/bump-bar";
 import { ConfigService } from '../../servicios/ConfigService';
+import { NavegacionService } from '../../servicios/NavegacionService';
 
 @Component({
   selector: 'app-pantalla-comandas',
@@ -15,8 +16,8 @@ import { ConfigService } from '../../servicios/ConfigService';
 export class PantallaComandas {
   
   svrConfig = inject(ConfigService);
+  srvNavegacion = inject(NavegacionService);
   srvComandas = inject(ComandasService);
-  comandas = this.srvComandas.comandas;
 
   ngOnInit() {
     console.log('Cargando Registros');
@@ -2085,7 +2086,7 @@ export class PantallaComandas {
       }
     ];
 
-    //this.srvComandas.AgregarRegistros(dev);
+    this.srvComandas.AgregarRegistros(dev);
   }
 
   onProductoSeleccionado(idProducto: ComandaModel) {

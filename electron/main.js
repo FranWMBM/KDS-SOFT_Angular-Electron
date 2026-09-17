@@ -2,7 +2,8 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-const { iniciarMonitor, reiniciarMonitor } = require('./services/monitorRegistros');
+const { iniciarMonitor, detenerMonitor } = require('./services/monitorRegistros');
+const { cerrarConexion } = require('./database/connection');
 
 let mainWindow;
 
@@ -81,6 +82,9 @@ function obtenerRutaConfiguracion() {
 
 ipcMain.handle('configuracion:guardar', async (_, configuracion) => {
   try {
+    // Primero espera cualquier consulta en curso.
+    await detenerMonitor();
+
     const ruta = obtenerRutaConfiguracion();
 
     fs.writeFileSync(
@@ -89,13 +93,15 @@ ipcMain.handle('configuracion:guardar', async (_, configuracion) => {
       'utf-8',
     );
 
-    console.log('Configuración guardada en:', ruta);
+    // Descarta el pool que usaba las credenciales anteriores.
+    await cerrarConexion();
 
-    await reiniciarMonitor(mainWindow);
+    // La próxima llamada a conectar() leerá el config.json nuevo.
+    await iniciarMonitor(mainWindow);
 
     return { correcto: true };
   } catch (error) {
-    console.error('Error guardando configuración o reiniciando el monitor:', error);
+    console.error('Error al aplicar la configuración:', error);
 
     return {
       correcto: false,

@@ -26,9 +26,18 @@ export class PantallaComandas implements OnInit {
    imagenMarcaAgua = signal<string | null>(null);
 
   async ngOnInit(): Promise<void> {
+
+    console.log('Cargando Registros>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     try {
       const configuracion = await window.electronAPI?.obtenerConfiguracion();
-      this.imagenMarcaAgua.set(configuracion?.imagenMarcaAgua ?? null);
+
+      if(!configuracion) {
+        console.error('No se pudo obtener la configuración del archivo config.json');
+        return;
+      }
+
+      this.svrConfig.asignarConfiguracion(configuracion);
+      this.imagenMarcaAgua.set(configuracion.imagenMarcaAgua ?? null);
     } catch (error) {
       console.error('No se pudo cargar la marca de agua:', error);
     }

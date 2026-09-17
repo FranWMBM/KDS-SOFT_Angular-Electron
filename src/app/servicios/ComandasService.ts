@@ -68,17 +68,4 @@ export class ComandasService {
       return comandas;
     });
   }
-
-  
-
-  public Bump(): void {
-    const seleccionada = this.comandaSeleccionada;
-    if (!seleccionada) return;
-
-    this.comandas.update((comandas) =>
-      comandas.filter((comanda) => comanda.id_comanda !== seleccionada.id_comanda),
-    );
-
-    this.svrConfig.seleccionarComanda(undefined);
-  }
 }

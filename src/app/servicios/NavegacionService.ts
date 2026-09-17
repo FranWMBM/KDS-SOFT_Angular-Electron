@@ -7,7 +7,6 @@ import { ComandasService } from './ComandasService';
   providedIn: 'root',
 })
 export class NavegacionService {
-  private readonly comandasService = inject(ComandasService);
   private readonly configService = inject(ConfigService);
 
   public get seleccion(): ComandaModel | undefined {
@@ -15,11 +14,11 @@ export class NavegacionService {
   }
 
   readonly paginaActual = this.configService.paginaActual;
-  
+
   private readonly _comandasVisibles = signal<ComandaModel[]>([]);
 
   private readonly _todasLasColumnas = computed(() =>
-    this.comandasService.comandas().flatMap((comanda) =>
+    this.configService.comandas().flatMap((comanda) =>
       comanda.tickets.map((columna, indiceColumna) => ({
         comanda,
         columna,
@@ -105,13 +104,20 @@ export class NavegacionService {
   }
 
   public Bump(): void {
-    this.comandasService.Bump();
+    const seleccionada = this.seleccion;
+    if (!seleccionada) return;
+
+    this.configService.comandas.update((comandas) =>
+      comandas.filter((comanda) => comanda.id_comanda !== seleccionada.id_comanda),
+    );
+
+    this.configService.seleccionarComanda(undefined);
 
     const primeraVisible = this.comandasVisibles()[0];
 
     if (primeraVisible) {
       this.configService.seleccionarComanda(primeraVisible);
-    } else if (this.comandasService.comandas().length > 0) {
+    } else if (this.configService.comandas().length > 0) {
       this.anteriorPagina();
     }
   }

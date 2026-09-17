@@ -1,27 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ConfiguracionKDS } from '../../interfaces/configuracion';
+import { ConfigService } from '../../servicios/ConfigService';
 
 export interface MonitorCocina {
   id: number;
   nombre: string;
-}
-
-export interface ConfiguracionKDS {
-  servidor: string;
-  baseDatos: string;
-  usuario: string;
-  contrasena: string;
-
-  filasTicket: number;
-
-  columnasPorPagina: number;
-  filasPorPagina: number;
-
-  monitorCocina: number | null;
-
-  imagenMarcaAgua: string | null;
 }
 
 @Component({
@@ -31,6 +17,7 @@ export interface ConfiguracionKDS {
   styleUrl: './configuracion.css',
 })
 export class Configuracion {
+  configService = inject(ConfigService);
   formulario: FormGroup;
 
   mostrarContrasena = signal(false);
@@ -45,10 +32,11 @@ export class Configuracion {
     { id: 4, nombre: 'POSTRES' },
   ];
 
-  constructor(private fb: FormBuilder, private router: Router) {
-
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+  ) {
     this.formulario = this.fb.group({
-
       // Base de datos
       servidor: ['', Validators.required],
       baseDatos: ['', Validators.required],
@@ -56,42 +44,19 @@ export class Configuracion {
       contrasena: ['', Validators.required],
 
       // Ticket
-      filasTicket: [
-        7,
-        [
-          Validators.required,
-          Validators.min(5),
-        ],
-      ],
+      filasTicket: [7, [Validators.required, Validators.min(5)]],
 
       // Página
-      columnasPorPagina: [
-        3,
-        [
-          Validators.required,
-          Validators.min(3),
-        ],
-      ],
+      columnasPorPagina: [3, [Validators.required, Validators.min(3)]],
 
-      filasPorPagina: [
-        1,
-        [
-          Validators.required,
-          Validators.min(1),
-        ],
-      ],
+      filasPorPagina: [1, [Validators.required, Validators.min(1)]],
 
       // Monitor
-      monitorCocina: [
-        null,
-        Validators.required
-      ],
-
+      monitorCocina: [null, Validators.required],
     });
   }
 
   seleccionarImagen(event: Event): void {
-
     const input = event.target as HTMLInputElement;
 
     if (!input.files || input.files.length === 0) {
@@ -119,20 +84,22 @@ export class Configuracion {
   }
 
   cambiarVisibilidadContrasena(): void {
-    this.mostrarContrasena.update(valor => !valor);
+    this.mostrarContrasena.update((valor) => !valor);
   }
 
-  guardar(): void {
-
+  async guardar(): Promise<void> {
     if (this.formulario.invalid) {
-
       this.formulario.markAllAsTouched();
 
       return;
     }
 
-    const configuracion: ConfiguracionKDS = {
+    if (!window.electronAPI) {
+      console.error('El guardado solo está disponible en Electron');
+      return;
+    }
 
+    const configuracion: ConfiguracionKDS = {
       servidor: this.formulario.value.servidor,
       baseDatos: this.formulario.value.baseDatos,
       usuario: this.formulario.value.usuario,
@@ -140,28 +107,26 @@ export class Configuracion {
 
       filasTicket: this.formulario.value.filasTicket,
 
-      columnasPorPagina:
-        this.formulario.value.columnasPorPagina,
+      columnasPorPagina: this.formulario.value.columnasPorPagina,
 
-      filasPorPagina:
-        this.formulario.value.filasPorPagina,
+      filasPorPagina: this.formulario.value.filasPorPagina,
 
-      monitorCocina:
-        Number(this.formulario.value.monitorCocina),
+      monitorCocina: Number(this.formulario.value.monitorCocina),
 
-      imagenMarcaAgua:
-        this.imagenPreview(),
+      imagenMarcaAgua: this.imagenPreview(),
     };
 
-    console.log('Configuración:', configuracion);
+    try {
+      const resultado = await window.electronAPI.guardarConfiguracion(configuracion);
 
-    // Aquí posteriormente llamaremos:
-    //
-    // this.configuracionService.guardar(configuracion);
-    //
-    // o
-    //
-    // window.electronAPI.guardarConfiguracion(configuracion);
+      if (resultado.correcto) {
+        this.cerrarConfiguracion();
+      } else {
+        console.error('No se pudo guardar:', resultado.error);
+      }
+    } catch (error) {
+      console.error('Error al comunicarse con Electron:', error);
+    }
   }
 
   cerrarConfiguracion(): void {

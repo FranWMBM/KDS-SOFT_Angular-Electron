@@ -48,8 +48,6 @@ app.on('window-all-closed', () => {
 });
 
 
-
-
 function obtenerRutaConfiguracion() {
   return path.join(app.getPath('userData'), 'config.json');
 }

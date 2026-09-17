@@ -1,6 +1,4 @@
-
 <div class="configuracion">
-
   <!-- ========================================= -->
   <!-- ENCABEZADO -->
   <!-- ========================================= -->
@@ -12,390 +10,227 @@
     </div>
   </div>
 
-
-  <form
-    [formGroup]="formulario"
-    (ngSubmit)="guardar()"
-  >
-
+  <form [formGroup]="formulario" (ngSubmit)="guardar()">
     <!-- ========================================= -->
     <!-- BASE DE DATOS -->
     <!-- ========================================= -->
 
     <section class="seccion">
-
       <div class="titulo-seccion">
         <h2>Base de datos</h2>
         <p>Credenciales de conexión a SQL Server</p>
       </div>
 
       <div class="grid">
-
         <!-- SERVIDOR -->
 
         <div class="campo campo-grande">
+          <label> Servidor </label>
 
-          <label>
-            Servidor
-          </label>
+          <input type="text" formControlName="servidor" placeholder="Ej. 192.168.1.10\SQLEXPRESS" />
 
-          <input
-            type="text"
-            formControlName="servidor"
-            placeholder="Ej. 192.168.1.10\SQLEXPRESS"
-          />
-
-          @if (
-            formulario.get('servidor')?.touched &&
-            formulario.get('servidor')?.invalid
-          ) {
-            <span class="error">
-              El servidor es obligatorio.
-            </span>
+          @if (formulario.get('servidor')?.touched && formulario.get('servidor')?.invalid) {
+            <span class="error"> El servidor es obligatorio. </span>
           }
-
         </div>
-
 
         <!-- BASE DE DATOS -->
 
         <div class="campo">
+          <label> Base de datos </label>
 
-          <label>
-            Base de datos
-          </label>
+          <input type="text" formControlName="baseDatos" placeholder="Ej. KDS" />
 
-          <input
-            type="text"
-            formControlName="baseDatos"
-            placeholder="Ej. KDS"
-          />
-
-          @if (
-            formulario.get('baseDatos')?.touched &&
-            formulario.get('baseDatos')?.invalid
-          ) {
-            <span class="error">
-              La base de datos es obligatoria.
-            </span>
+          @if (formulario.get('baseDatos')?.touched && formulario.get('baseDatos')?.invalid) {
+            <span class="error"> La base de datos es obligatoria. </span>
           }
-
         </div>
-
 
         <!-- USUARIO -->
 
         <div class="campo">
+          <label> Usuario </label>
 
-          <label>
-            Usuario
-          </label>
+          <input type="text" formControlName="usuario" placeholder="Usuario SQL" />
 
-          <input
-            type="text"
-            formControlName="usuario"
-            placeholder="Usuario SQL"
-          />
-
-          @if (
-            formulario.get('usuario')?.touched &&
-            formulario.get('usuario')?.invalid
-          ) {
-            <span class="error">
-              El usuario es obligatorio.
-            </span>
+          @if (formulario.get('usuario')?.touched && formulario.get('usuario')?.invalid) {
+            <span class="error"> El usuario es obligatorio. </span>
           }
-
         </div>
-
 
         <!-- CONTRASEÑA -->
 
         <div class="campo campo-grande">
-
-          <label>
-            Contraseña
-          </label>
+          <label> Contraseña </label>
 
           <div class="campo-contrasena">
-
             <input
               [type]="mostrarContrasena() ? 'text' : 'password'"
               formControlName="contrasena"
               placeholder="Contraseña"
             />
 
-            <button
-              type="button"
-              class="boton-contrasena"
-              (click)="cambiarVisibilidadContrasena()"
-            >
+            <button type="button" class="boton-contrasena" (click)="cambiarVisibilidadContrasena()">
               @if (mostrarContrasena()) {
                 Ocultar
               } @else {
                 Ver
               }
             </button>
-
           </div>
 
-          @if (
-            formulario.get('contrasena')?.touched &&
-            formulario.get('contrasena')?.invalid
-          ) {
-            <span class="error">
-              La contraseña es obligatoria.
-            </span>
+          @if (formulario.get('contrasena')?.touched && formulario.get('contrasena')?.invalid) {
+            <span class="error"> La contraseña es obligatoria. </span>
           }
-
         </div>
-
       </div>
-
     </section>
-
 
     <!-- ========================================= -->
     <!-- DISTRIBUCIÓN DE PANTALLA -->
     <!-- ========================================= -->
 
     <section class="seccion">
-
       <div class="titulo-seccion">
         <h2>Distribución de pantalla</h2>
 
-        <p>
-          Define cómo se mostrarán los tickets en el monitor.
-        </p>
+        <p>Define cómo se mostrarán los tickets en el monitor.</p>
       </div>
 
-
       <div class="grid tres-columnas">
-
         <!-- FILAS DEL TICKET -->
 
         <div class="campo">
+          <label> Filas por ticket </label>
 
-          <label>
-            Filas por ticket
-          </label>
+          <input type="number" min="5" formControlName="filasTicket" />
 
-          <input
-            type="number"
-            min="5"
-            formControlName="filasTicket"
-          />
-
-          <span class="ayuda">
-            Mínimo 5
-          </span>
+          <span class="ayuda"> Mínimo 5 </span>
 
           @if (
             formulario.get('filasTicket')?.touched &&
             formulario.get('filasTicket')?.hasError('required')
           ) {
-            <span class="error">
-              Este campo es obligatorio.
-            </span>
+            <span class="error"> Este campo es obligatorio. </span>
           }
 
           @if (
-            formulario.get('filasTicket')?.touched &&
-            formulario.get('filasTicket')?.hasError('min')
+            formulario.get('filasTicket')?.touched && formulario.get('filasTicket')?.hasError('min')
           ) {
-            <span class="error">
-              Debe tener al menos 5 filas.
-            </span>
+            <span class="error"> Debe tener al menos 5 filas. </span>
           }
-
         </div>
-
 
         <!-- COLUMNAS POR PÁGINA -->
 
         <div class="campo">
+          <label> Columnas por página </label>
 
-          <label>
-            Columnas por página
-          </label>
+          <input type="number" min="3" formControlName="columnasPorPagina" />
 
-          <input
-            type="number"
-            min="3"
-            formControlName="columnasPorPagina"
-          />
-
-          <span class="ayuda">
-            Mínimo 3
-          </span>
+          <span class="ayuda"> Mínimo 3 </span>
 
           @if (
             formulario.get('columnasPorPagina')?.touched &&
             formulario.get('columnasPorPagina')?.hasError('required')
           ) {
-            <span class="error">
-              Este campo es obligatorio.
-            </span>
+            <span class="error"> Este campo es obligatorio. </span>
           }
 
           @if (
             formulario.get('columnasPorPagina')?.touched &&
             formulario.get('columnasPorPagina')?.hasError('min')
           ) {
-            <span class="error">
-              Debe haber al menos 3 columnas.
-            </span>
+            <span class="error"> Debe haber al menos 3 columnas. </span>
           }
-
         </div>
-
 
         <!-- FILAS POR PÁGINA -->
 
         <div class="campo">
+          <label> Filas por página </label>
 
-          <label>
-            Filas por página
-          </label>
+          <input type="number" min="1" formControlName="filasPorPagina" />
 
-          <input
-            type="number"
-            min="1"
-            formControlName="filasPorPagina"
-          />
-
-          <span class="ayuda">
-            Mínimo 1
-          </span>
+          <span class="ayuda"> Mínimo 1 </span>
 
           @if (
             formulario.get('filasPorPagina')?.touched &&
             formulario.get('filasPorPagina')?.hasError('required')
           ) {
-            <span class="error">
-              Este campo es obligatorio.
-            </span>
+            <span class="error"> Este campo es obligatorio. </span>
           }
 
           @if (
             formulario.get('filasPorPagina')?.touched &&
             formulario.get('filasPorPagina')?.hasError('min')
           ) {
-            <span class="error">
-              Debe haber al menos 1 fila.
-            </span>
+            <span class="error"> Debe haber al menos 1 fila. </span>
           }
-
         </div>
-
       </div>
-
     </section>
-
 
     <!-- ========================================= -->
     <!-- MONITOR DE COCINA -->
     <!-- ========================================= -->
 
     <section class="seccion">
-
       <div class="titulo-seccion">
         <h2>Monitor de cocina</h2>
 
-        <p>
-          Selecciona el área que mostrará este equipo.
-        </p>
+        <p>Selecciona el área que mostrará este equipo.</p>
       </div>
 
-
       <div class="campo">
-
-        <label>
-          Monitor
-        </label>
+        <label> Monitor </label>
 
         <select formControlName="monitorCocina">
-
           <!--
             CORRECCIÓN:
             usamos value / [value] en lugar de [ngValue]
           -->
 
-          <option value="">
-            Selecciona un monitor
-          </option>
+          <option value="">Selecciona un monitor</option>
 
           @for (monitor of monitores; track monitor.id) {
-
             <option [value]="monitor.id">
               {{ monitor.nombre }}
             </option>
-
           }
-
         </select>
 
-
-        @if (
-          formulario.get('monitorCocina')?.touched &&
-          formulario.get('monitorCocina')?.invalid
-        ) {
-          <span class="error">
-            Debes seleccionar un monitor.
-          </span>
+        @if (formulario.get('monitorCocina')?.touched && formulario.get('monitorCocina')?.invalid) {
+          <span class="error"> Debes seleccionar un monitor. </span>
         }
-
       </div>
-
     </section>
-
 
     <!-- ========================================= -->
     <!-- MARCA DE AGUA -->
     <!-- ========================================= -->
 
     <section class="seccion">
-
       <div class="titulo-seccion">
-
         <h2>Marca de agua</h2>
 
-        <p>
-          Selecciona la imagen que aparecerá detrás de las comandas.
-        </p>
-
+        <p>Selecciona la imagen que aparecerá detrás de las comandas.</p>
       </div>
 
-
       <div class="marca-agua">
-
         <!-- SELECCIONAR IMAGEN -->
 
         <label class="selector-imagen">
+          <input type="file" accept="image/*" (change)="seleccionarImagen($event)" />
 
-          <input
-            type="file"
-            accept="image/*"
-            (change)="seleccionarImagen($event)"
-          />
-
-          <span>
-            Seleccionar imagen
-          </span>
-
+          <span> Seleccionar imagen </span>
         </label>
-
 
         <!-- PREVIEW -->
 
         @if (imagenPreview()) {
-
           <div class="preview">
-
-            <img
-              [src]="imagenPreview()"
-              alt="Marca de agua"
-            />
+            <img [src]="imagenPreview()" alt="Marca de agua" />
 
             <button
               type="button"
@@ -405,56 +240,29 @@
             >
               ×
             </button>
-
           </div>
-
         } @else {
-
           <!-- SIN IMAGEN -->
 
           <div class="sin-imagen">
+            <span class="icono-imagen"> 🖼 </span>
 
-            <span class="icono-imagen">
-              🖼
-            </span>
-
-            <span>
-              Sin imagen seleccionada
-            </span>
-
+            <span> Sin imagen seleccionada </span>
           </div>
-
         }
-
       </div>
-
     </section>
-
 
     <!-- ========================================= -->
     <!-- ACCIONES -->
     <!-- ========================================= -->
 
     <div class="acciones">
-
-      <button
-        type="button"
-        class="boton secundario"
-        (click)="cerrarConfiguracion()"
-      >
+      <button type="button" class="boton secundario" (click)="cerrarConfiguracion()">
         Cancelar
       </button>
 
-
-      <button
-        type="submit"
-        class="boton guardar"
-      >
-        Guardar configuración
-      </button>
-
+      <button type="submit" class="boton guardar">Guardar configuración</button>
     </div>
-
   </form>
-
 </div>

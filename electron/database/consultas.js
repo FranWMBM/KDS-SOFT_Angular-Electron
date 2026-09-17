@@ -74,40 +74,11 @@ async function obtenerNuevosRegistros() {
 }
 
 
-// ========================================
-// POLLING
-// ========================================
-
-async function revisarRegistros() {
-  try {
-
-    const nuevosRegistros = await obtenerNuevosRegistros();
-
-    if (nuevosRegistros.length === 0) {
-      return;
-    }
-
-    console.log('Nuevos registros:', nuevosRegistros);
-
-    // Aquí posteriormente puedes enviarlos a Angular
-    // mediante webContents.send()
-
-    // Ejemplo:
-    //
-    // mainWindow.webContents.send(
-    //   'nuevos-registros',
-    //   nuevosRegistros
-    // );
-
-  } catch (error) {
-
-    console.error(
-      'Error al consultar nuevos registros:',
-      error
-    );
-  }
+function limpiarRegistrosProcesados() {
+  registrosProcesados.clear();
 }
 
 module.exports = {
   obtenerNuevosRegistros,
+  limpiarRegistrosProcesados
 };

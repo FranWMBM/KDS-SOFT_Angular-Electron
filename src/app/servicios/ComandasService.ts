@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { ComandaModel } from '../interfaces/comanda';
 import { ProductoMonitor } from '../interfaces/productosenproduccion';
 import { ConfigService } from './ConfigService';
@@ -9,23 +9,17 @@ import { ConfigService } from './ConfigService';
 export class ComandasService {
   // seleccionado? : ComandaModel = undefined;
   svrConfig = inject(ConfigService);
-  private _comandas = signal<ComandaModel[]>([]);
-  readonly comandas = this._comandas.asReadonly();
+
+  readonly comandas = this.svrConfig.comandas;
+
+  public get comandaSeleccionada(): ComandaModel | undefined {
+    return this.svrConfig.comandaSeleccionada;
+  }
+
+  //readonly comandas = this._comandas.asReadonly();
   private _paginaActual = signal(0);
   readonly paginaActual = this._paginaActual.asReadonly();
-  public comandaSeleccionada?: ComandaModel;
-
-  // constructor() {
-  //   // window.electronAPI.onNuevosRegistros(
-  //   //   (registros: ProductoMonitor[]) => {
-  //   //     console.log(
-  //   //       'Angular recibió nuevos registros:',
-  //   //       registros
-  //   //     );
-  //   //     this.AgregarRegistros(registros);
-  //   //   }
-  //   // );
-  // }
+  
 
   constructor() {
     if (!window.electronAPI?.onNuevosRegistros) {
@@ -51,7 +45,7 @@ export class ComandasService {
       grupos.get(idComanda)!.push(registro);
     }
 
-    this._comandas.update((actual) => {
+    this.comandas.update((actual) => {
       const comandas = [...actual];
 
       for (const productos of grupos.values()) {
@@ -68,43 +62,23 @@ export class ComandasService {
       }
 
       if (!this.comandaSeleccionada) {
-        this.seleccionarComanda(comandas[0]);
+        this.svrConfig.seleccionarComanda(comandas[0]);
       }
 
       return comandas;
     });
   }
 
-  public seleccionarComanda(comanda: ComandaModel | undefined): void {
-    // if (this.comandaSeleccionada === comanda) {
-    //   return;
-    // }
-
-    this.actualizarSeleccion(this.comandaSeleccionada, false);
-
-    this.comandaSeleccionada = comanda;
-
-    this.actualizarSeleccion(this.comandaSeleccionada, true);
-  }
-
-  private actualizarSeleccion(comanda: ComandaModel | undefined, seleccionada: boolean): void {
-    if (!comanda) {
-      return;
-    }
-
-    for (const ticket of comanda.tickets) {
-      ticket.seleccionado.set(seleccionada);
-    }
-  }
+  
 
   public Bump(): void {
     const seleccionada = this.comandaSeleccionada;
     if (!seleccionada) return;
 
-    this._comandas.update((comandas) =>
+    this.comandas.update((comandas) =>
       comandas.filter((comanda) => comanda.id_comanda !== seleccionada.id_comanda),
     );
 
-    this.seleccionarComanda(undefined);
+    this.svrConfig.seleccionarComanda(undefined);
   }
 }

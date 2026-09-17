@@ -11,12 +11,11 @@ export class NavegacionService {
   private readonly configService = inject(ConfigService);
 
   public get seleccion(): ComandaModel | undefined {
-    return this.comandasService.comandaSeleccionada;
+    return this.configService.comandaSeleccionada;
   }
 
-  private readonly _paginaActual = signal(0);
-  readonly paginaActual = this._paginaActual.asReadonly();
-
+  readonly paginaActual = this.configService.paginaActual;
+  
   private readonly _comandasVisibles = signal<ComandaModel[]>([]);
 
   private readonly _todasLasColumnas = computed(() =>
@@ -42,7 +41,7 @@ export class NavegacionService {
 
   readonly columnasVisibles = computed(() => {
     const columnasPorPagina = this.configService.columnasPorPagina;
-    const indiceInicial = this._paginaActual() * columnasPorPagina;
+    const indiceInicial = this.paginaActual() * columnasPorPagina;
     const indiceFinal = indiceInicial + columnasPorPagina;
 
     return this._todasLasColumnas().slice(indiceInicial, indiceFinal);
@@ -65,7 +64,7 @@ export class NavegacionService {
     if (indice === -1) return;
 
     if (indice < visibles.length - 1) {
-      this.comandasService.seleccionarComanda(visibles[indice + 1]);
+      this.configService.seleccionarComanda(visibles[indice + 1]);
       return;
     }
 
@@ -83,7 +82,7 @@ export class NavegacionService {
     if (indice === -1) return;
 
     if (indice > 0) {
-      this.comandasService.seleccionarComanda(visibles[indice - 1]);
+      this.configService.seleccionarComanda(visibles[indice - 1]);
       return;
     }
 
@@ -93,16 +92,16 @@ export class NavegacionService {
   }
 
   public siguientePagina(): void {
-    this._paginaActual.update((pagina) => pagina + 1);
+    this.paginaActual.update((pagina) => pagina + 1);
 
-    this.comandasService.seleccionarComanda(this.comandasVisibles()[0]);
+    this.configService.seleccionarComanda(this.comandasVisibles()[0]);
   }
 
   public anteriorPagina(): void {
-    this._paginaActual.update((pagina) => pagina - 1);
+    this.paginaActual.update((pagina) => pagina - 1);
 
     const total = this.comandasVisibles().length;
-    this.comandasService.seleccionarComanda(this.comandasVisibles()[total - 1]);
+    this.configService.seleccionarComanda(this.comandasVisibles()[total - 1]);
   }
 
   public Bump(): void {
@@ -111,7 +110,7 @@ export class NavegacionService {
     const primeraVisible = this.comandasVisibles()[0];
 
     if (primeraVisible) {
-      this.comandasService.seleccionarComanda(primeraVisible);
+      this.configService.seleccionarComanda(primeraVisible);
     } else if (this.comandasService.comandas().length > 0) {
       this.anteriorPagina();
     }

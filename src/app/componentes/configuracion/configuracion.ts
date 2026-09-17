@@ -120,6 +120,7 @@ export class Configuracion {
       const resultado = await window.electronAPI.guardarConfiguracion(configuracion);
 
       if (resultado.correcto) {
+        this.configService.asignarConfiguracion(configuracion);
         this.cerrarConfiguracion();
       } else {
         console.error('No se pudo guardar:', resultado.error);

@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-const { iniciarMonitor } = require('./services/monitorRegistros');
+const { iniciarMonitor, reiniciarMonitor } = require('./services/monitorRegistros');
 
 let mainWindow;
 
@@ -52,6 +52,33 @@ function obtenerRutaConfiguracion() {
   return path.join(app.getPath('userData'), 'config.json');
 }
 
+// ipcMain.handle('configuracion:guardar', async (_, configuracion) => {
+//   try {
+//     const ruta = obtenerRutaConfiguracion();
+
+//     fs.writeFileSync(
+//       ruta,
+//       JSON.stringify(configuracion, null, 2),
+//       'utf-8'
+//     );
+
+//     console.log('Configuración guardada en:', ruta);
+
+//     return {
+//       correcto: true
+//     };
+
+//   } catch (error) {
+
+//     console.error('Error guardando configuración:', error);
+
+//     return {
+//       correcto: false,
+//       error: error instanceof Error ? error.message : String(error)
+//     };
+//   }
+// });
+
 ipcMain.handle('configuracion:guardar', async (_, configuracion) => {
   try {
     const ruta = obtenerRutaConfiguracion();
@@ -59,22 +86,20 @@ ipcMain.handle('configuracion:guardar', async (_, configuracion) => {
     fs.writeFileSync(
       ruta,
       JSON.stringify(configuracion, null, 2),
-      'utf-8'
+      'utf-8',
     );
 
     console.log('Configuración guardada en:', ruta);
 
-    return {
-      correcto: true
-    };
+    await reiniciarMonitor(mainWindow);
 
+    return { correcto: true };
   } catch (error) {
-
-    console.error('Error guardando configuración:', error);
+    console.error('Error guardando configuración o reiniciando el monitor:', error);
 
     return {
       correcto: false,
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
     };
   }
 });

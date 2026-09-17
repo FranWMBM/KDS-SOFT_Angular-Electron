@@ -13,6 +13,8 @@ declare global {
       guardarConfiguracion(
         configuracion: ConfiguracionKDS
       ): Promise<{ correcto: boolean; error?: string }>;
+
+      obtenerConfiguracion(): Promise<ConfiguracionKDS | null>;
     };
   }
 }

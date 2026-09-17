@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -16,7 +16,31 @@ export interface MonitorCocina {
   templateUrl: './configuracion.html',
   styleUrl: './configuracion.css',
 })
-export class Configuracion {
+export class Configuracion implements OnInit {
+  async ngOnInit(): Promise<void> {
+    try {
+      const configuracion: ConfiguracionKDS | null | undefined =
+        await window.electronAPI?.obtenerConfiguracion();
+
+      if (!configuracion) return;
+
+      this.formulario.patchValue({
+        servidor: configuracion.servidor,
+        baseDatos: configuracion.baseDatos,
+        usuario: configuracion.usuario,
+        contrasena: configuracion.contrasena,
+        filasTicket: configuracion.filasTicket,
+        columnasPorPagina: configuracion.columnasPorPagina,
+        filasPorPagina: configuracion.filasPorPagina,
+        monitorCocina: configuracion.monitorCocina,
+      });
+
+      this.imagenPreview.set(configuracion.imagenMarcaAgua ?? null);
+    } catch (error) {
+      console.error('No se pudo cargar la configuración:', error);
+    }
+  }
+
   configService = inject(ConfigService);
   formulario: FormGroup;
 

@@ -53,33 +53,6 @@ function obtenerRutaConfiguracion() {
   return path.join(app.getPath('userData'), 'config.json');
 }
 
-// ipcMain.handle('configuracion:guardar', async (_, configuracion) => {
-//   try {
-//     const ruta = obtenerRutaConfiguracion();
-
-//     fs.writeFileSync(
-//       ruta,
-//       JSON.stringify(configuracion, null, 2),
-//       'utf-8'
-//     );
-
-//     console.log('Configuración guardada en:', ruta);
-
-//     return {
-//       correcto: true
-//     };
-
-//   } catch (error) {
-
-//     console.error('Error guardando configuración:', error);
-
-//     return {
-//       correcto: false,
-//       error: error instanceof Error ? error.message : String(error)
-//     };
-//   }
-// });
-
 ipcMain.handle('configuracion:guardar', async (_, configuracion) => {
   try {
     // Primero espera cualquier consulta en curso.
@@ -128,4 +101,14 @@ ipcMain.handle('configuracion:cargar', async () => {
 
     return null;
   }
+});
+
+ipcMain.handle('configuracion:obtener', () => {
+  const ruta = path.join(app.getPath('userData'), 'config.json');
+
+  if (!fs.existsSync(ruta)) {
+    return null; // Todavía no hay configuración guardada
+  }
+
+  return JSON.parse(fs.readFileSync(ruta, 'utf-8'));
 });

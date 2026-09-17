@@ -9,4 +9,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   guardarConfiguracion: (configuracion) =>
     ipcRenderer.invoke('configuracion:guardar', configuracion),
+
+  obtenerConfiguracion: () => ipcRenderer.invoke('configuracion:obtener'),
 });

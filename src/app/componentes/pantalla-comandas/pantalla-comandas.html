@@ -1,5 +1,7 @@
 <div class="marca-agua">
-  <img src="imagenes/logo.png" alt="Logo" />
+  @if (imagenMarcaAgua(); as imagen) {
+    <img [src]="imagen" alt="Marca de agua" />
+  }
 </div>
 <div class="kds">
   <!-- FILA 1: ENCABEZADO -->

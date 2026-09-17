@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { TicketPantalla } from './ticket-pantalla/ticket-pantalla';
 import { ComandasService } from '../../servicios/ComandasService';
 import { ProductoMonitor } from '../../interfaces/productosenproduccion';
@@ -13,14 +13,25 @@ import { NavegacionService } from '../../servicios/NavegacionService';
   templateUrl: './pantalla-comandas.html',
   styleUrl: './pantalla-comandas.css',
 })
-export class PantallaComandas {
+export class PantallaComandas implements OnInit {
   
   svrConfig = inject(ConfigService);
   srvNavegacion = inject(NavegacionService);
   srvComandas = inject(ComandasService);
 
-  ngOnInit() {
-    console.log('Cargando Registros');
+  // ngOnInit() {
+  //   console.log('Cargando Registros');
+  // }
+
+   imagenMarcaAgua = signal<string | null>(null);
+
+  async ngOnInit(): Promise<void> {
+    try {
+      const configuracion = await window.electronAPI?.obtenerConfiguracion();
+      this.imagenMarcaAgua.set(configuracion?.imagenMarcaAgua ?? null);
+    } catch (error) {
+      console.error('No se pudo cargar la marca de agua:', error);
+    }
   }
 
   onProductoSeleccionado(idProducto: ComandaModel) {

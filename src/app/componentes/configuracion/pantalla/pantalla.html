@@ -1,0 +1,165 @@
+<form [formGroup]="formulario" (ngSubmit)="guardar()">
+  <form [formGroup]="formulario" (ngSubmit)="guardar()">
+  <section class="seccion">
+    <div class="titulo-seccion">
+      <h2>Distribución de pantalla</h2>
+      <p>Define cómo se mostrarán los tickets en el monitor.</p>
+    </div>
+
+    <div class="grid tres-columnas">
+      <div class="campo">
+        <label for="filasTicket">Filas por ticket</label>
+
+        <input
+          id="filasTicket"
+          type="number"
+          min="5"
+          formControlName="filasTicket"
+        />
+
+        <span class="ayuda">Mínimo 5</span>
+
+        @if (formulario.get('filasTicket')?.touched && formulario.get('filasTicket')?.hasError('required')) {
+          <span class="error">Este campo es obligatorio.</span>
+        }
+
+        @if (formulario.get('filasTicket')?.touched && formulario.get('filasTicket')?.hasError('min')) {
+          <span class="error">Debe tener al menos 5 filas.</span>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="columnasPorPagina">Columnas por página</label>
+
+        <input
+          id="columnasPorPagina"
+          type="number"
+          min="3"
+          formControlName="columnasPorPagina"
+        />
+
+        <span class="ayuda">Mínimo 3</span>
+
+        @if (formulario.get('columnasPorPagina')?.touched && formulario.get('columnasPorPagina')?.hasError('required')) {
+          <span class="error">Este campo es obligatorio.</span>
+        }
+
+        @if (formulario.get('columnasPorPagina')?.touched && formulario.get('columnasPorPagina')?.hasError('min')) {
+          <span class="error">Debe haber al menos 3 columnas.</span>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="filasPorPagina">Filas por página</label>
+
+        <input
+          id="filasPorPagina"
+          type="number"
+          min="1"
+          formControlName="filasPorPagina"
+        />
+
+        <span class="ayuda">Mínimo 1</span>
+
+        @if (formulario.get('filasPorPagina')?.touched && formulario.get('filasPorPagina')?.hasError('required')) {
+          <span class="error">Este campo es obligatorio.</span>
+        }
+
+        @if (formulario.get('filasPorPagina')?.touched && formulario.get('filasPorPagina')?.hasError('min')) {
+          <span class="error">Debe haber al menos 1 fila.</span>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="titulo-seccion">
+      <h2>Monitor de cocina</h2>
+      <p>Selecciona el área que mostrará este equipo.</p>
+    </div>
+
+    <div class="campo">
+      <label for="monitorCocina">Monitor</label>
+
+      <select id="monitorCocina" formControlName="monitorCocina">
+        <option value="">
+          @if (cargandoMonitores()) {
+            Cargando monitores...
+          } @else if (monitores.length === 0) {
+            No hay monitores disponibles
+          } @else {
+            Selecciona un monitor
+          }
+        </option>
+
+        @for (monitor of monitores; track monitor.id) {
+          <option [value]="monitor.id">{{ monitor.nombre }}</option>
+        }
+      </select>
+
+      @if (errorMonitores()) {
+        <span class="error" role="alert">{{ errorMonitores() }}</span>
+      }
+
+      @if (formulario.get('monitorCocina')?.touched && formulario.get('monitorCocina')?.invalid) {
+        <span class="error">Debes seleccionar un monitor.</span>
+      }
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="titulo-seccion">
+      <h2>Marca de agua</h2>
+      <p>Selecciona la imagen que aparecerá detrás de las comandas.</p>
+    </div>
+
+    <div class="marca-agua">
+      <label class="selector-imagen">
+        <input
+          type="file"
+          accept="image/*"
+          (change)="seleccionarImagen($event)"
+        />
+
+        <span>Seleccionar imagen</span>
+      </label>
+
+      @if (imagenPreview()) {
+        <div class="preview">
+          <img [src]="imagenPreview()" alt="Vista previa de la marca de agua" />
+
+          <button
+            type="button"
+            class="quitar-imagen"
+            title="Quitar imagen"
+            aria-label="Quitar imagen"
+            (click)="quitarImagen()"
+          >
+            ×
+          </button>
+        </div>
+      } @else {
+        <div class="sin-imagen">
+          <span class="icono-imagen" aria-hidden="true">🖼</span>
+          <span>Sin imagen seleccionada</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  @if (mensaje()) {
+    <p class="error" role="alert">{{ mensaje() }}</p>
+  }
+
+  <div class="acciones">
+    <button type="submit" class="boton guardar" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando...' : 'Guardar pantalla' }}
+    </button>
+  </div>
+</form>
+
+  @if (mensaje()) {
+    <p class="error">{{ mensaje() }}</p>
+  }
+  
+</form>

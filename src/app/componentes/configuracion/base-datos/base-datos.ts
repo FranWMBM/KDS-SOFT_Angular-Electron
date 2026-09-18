@@ -26,10 +26,10 @@ export class BaseDatos {
     if (!window.electronAPI) return;
 
     try {
-      // const datos = await window.electronAPI.obtenerBaseDatos();
-      // if (datos) {
-      //   this.formulario.patchValue(datos);
-      // }
+      const datos = await window.electronAPI.obtenerBaseDatos();
+      if (datos) {
+        this.formulario.patchValue(datos);
+      }
     } catch (error) {
       console.error('No se pudo leer bd.config:', error);
       this.mensaje.set('No se pudo cargar la conexión guardada.');

@@ -78,7 +78,20 @@ function limpiarRegistrosProcesados() {
   registrosProcesados.clear();
 }
 
+async function obtenerMonitores() {
+  const pool = await conectar();
+
+  const resultado = await pool.request().query(`
+    SELECT idmonitor AS id, descripcion AS nombre
+    FROM dbo.monitoresproduccion
+    ORDER BY descripcion
+  `);
+
+  return resultado.recordset;
+}
+
 module.exports = {
   obtenerNuevosRegistros,
-  limpiarRegistrosProcesados
+  limpiarRegistrosProcesados,
+  obtenerMonitores,
 };

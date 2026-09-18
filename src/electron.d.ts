@@ -15,6 +15,8 @@ declare global {
       ): Promise<{ correcto: boolean; error?: string }>;
 
       obtenerConfiguracion(): Promise<ConfiguracionKDS | null>;
+
+      obtenerMonitores(): Promise<MonitorCocina[]>;
     };
   }
 }

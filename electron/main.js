@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const { iniciarMonitor, detenerMonitor } = require('./services/monitorRegistros');
 const { cerrarConexion } = require('./database/connection');
+const { obtenerMonitores } = require('./database/consultas');
 
 let mainWindow;
 
@@ -111,4 +112,8 @@ ipcMain.handle('configuracion:obtener', () => {
   }
 
   return JSON.parse(fs.readFileSync(ruta, 'utf-8'));
+});
+
+ipcMain.handle('monitores:obtener', async () => {
+  return await obtenerMonitores();
 });

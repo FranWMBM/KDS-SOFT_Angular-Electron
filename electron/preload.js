@@ -11,4 +11,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.invoke('configuracion:guardar', configuracion),
 
   obtenerConfiguracion: () => ipcRenderer.invoke('configuracion:obtener'),
+
+  obtenerMonitores: () => ipcRenderer.invoke('monitores:obtener'),
 });

@@ -17,10 +17,19 @@ export interface MonitorCocina {
   styleUrl: './configuracion.css',
 })
 export class Configuracion implements OnInit {
+  monitores: MonitorCocina[] = [];
+
   async ngOnInit(): Promise<void> {
     try {
-      const configuracion: ConfiguracionKDS | null | undefined =
-        await window.electronAPI?.obtenerConfiguracion();
+      let configuracion: ConfiguracionKDS | null | undefined = undefined;
+
+      if (window.electronAPI) {
+        configuracion = await window.electronAPI?.obtenerConfiguracion();
+        this.monitores = await window.electronAPI?.obtenerMonitores();
+      }else{
+        configuracion = undefined;
+        this.monitores = [];
+      }
 
       if (!configuracion) return;
 
@@ -49,12 +58,6 @@ export class Configuracion implements OnInit {
   imagenPreview = signal<string | null>(null);
 
   // Más adelante esta lista puede venir de SQL Server
-  monitores: MonitorCocina[] = [
-    { id: 1, nombre: 'COCINA' },
-    { id: 2, nombre: 'EXPO' },
-    { id: 3, nombre: 'BAR' },
-    { id: 4, nombre: 'POSTRES' },
-  ];
 
   constructor(
     private fb: FormBuilder,

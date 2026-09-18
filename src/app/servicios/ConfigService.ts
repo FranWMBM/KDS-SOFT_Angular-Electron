@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { ConfiguracionKDS } from '../interfaces/configuracion';
 import { ComandaModel } from '../interfaces/comanda';
+import { ConfiguracionPantalla } from '../interfaces/configuracion';
 
 
 @Injectable({
@@ -18,7 +18,7 @@ export class ConfigService {
 
   public paginaActual = signal(0);
 
-  public asignarConfiguracion(configuraciones: ConfiguracionKDS): void {
+  public asignarConfiguracion(configuraciones: ConfiguracionPantalla): void {
     this.paginaActual.set(0);
     this.comandas.set([]);
     this.comandaSeleccionada = undefined;

@@ -1,7 +1,6 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { TicketPantalla } from './ticket-pantalla/ticket-pantalla';
 import { ComandasService } from '../../servicios/ComandasService';
-import { ProductoMonitor } from '../../interfaces/productosenproduccion';
 import { ComandaModel } from '../../interfaces/comanda';
 import { BumpBar } from '../bump-bar/bump-bar';
 import { ConfigService } from '../../servicios/ConfigService';
@@ -27,7 +26,7 @@ export class PantallaComandas implements OnInit {
   async ngOnInit(): Promise<void> {
     console.log('Cargando Registros>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     try {
-      const configuracion = await window.electronAPI?.obtenerConfiguracion();
+      const configuracion = await window.electronAPI?.obtenerPantalla();
 
       if (!configuracion) {
         console.error('No se pudo obtener la configuración del archivo config.json');

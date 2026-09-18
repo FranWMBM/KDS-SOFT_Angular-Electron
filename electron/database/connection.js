@@ -2,10 +2,14 @@ const sql = require('mssql');
 const { app } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
+const { obtenerBaseDatos } = require('../configuracion-store');
 
 function obtenerConfiguracionSQL() {
-  const ruta = path.join(app.getPath('userData'), 'config.json');
-  const configuracion = JSON.parse(fs.readFileSync(ruta, 'utf-8'));
+  const configuracion = obtenerBaseDatos();
+
+  if (!configuracion) {
+    throw new Error('Primero configura la conexión a la base de datos.');
+  }
 
   return {
     user: configuracion.usuario,

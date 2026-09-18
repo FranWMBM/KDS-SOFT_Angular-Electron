@@ -1,20 +1,22 @@
 import { ProductoMonitor } from './app/interfaces/productosenproduccion';
-import { ConfiguracionKDS } from './app/interfaces/configuracion';
+import { ConfiguracionPantalla, ConfiguracionBaseDatos, ResultadoGuardado } from './app/interfaces/configuracion';
 
 export {};
 
 declare global {
   interface Window {
     electronAPI?: {
-      onNuevosRegistros(
-        callback: (registros: ProductoMonitor[]) => void
-      ): void;
+      onNuevosRegistros(callback: (registros: ProductoMonitor[]) => void): void;
 
-      guardarConfiguracion(
-        configuracion: ConfiguracionKDS
-      ): Promise<{ correcto: boolean; error?: string }>;
+      guardarBaseDatos(datos: ConfiguracionBaseDatos): Promise<ResultadoGuardado>;
 
-      obtenerConfiguracion(): Promise<ConfiguracionKDS | null>;
+      obtenerBaseDatos(): Promise<ConfiguracionBaseDatos | null>;
+
+      guardarPantalla(datos: ConfiguracionPantalla): Promise<ResultadoGuardado>;
+
+      obtenerPantalla(): Promise<ConfiguracionPantalla | null>;
+
+      obtenerMonitores(): Promise<MonitorCocina[]>;
 
       obtenerMonitores(): Promise<MonitorCocina[]>;
     };

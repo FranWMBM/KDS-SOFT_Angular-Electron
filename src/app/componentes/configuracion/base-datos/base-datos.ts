@@ -27,7 +27,6 @@ export class BaseDatos {
 
     try {
       // const datos = await window.electronAPI.obtenerBaseDatos();
-
       // if (datos) {
       //   this.formulario.patchValue(datos);
       // }
@@ -49,19 +48,19 @@ export class BaseDatos {
     this.mensaje.set(null);
 
     try {
-      // const resultado = await window.electronAPI.guardarBaseDatos({
-      //   servidor: this.formulario.value.servidor!.trim(),
-      //   baseDatos: this.formulario.value.baseDatos!.trim(),
-      //   usuario: this.formulario.value.usuario!.trim(),
-      //   contrasena: this.formulario.value.contrasena!,
-      // });
+      const resultado = await window.electronAPI.guardarBaseDatos({
+        servidor: this.formulario.value.servidor!.trim(),
+        baseDatos: this.formulario.value.baseDatos!.trim(),
+        usuario: this.formulario.value.usuario!.trim(),
+        contrasena: this.formulario.value.contrasena!,
+      });
 
-      // if (!resultado.correcto) {
-      //   this.mensaje.set(resultado.error ?? 'No se pudo guardar la conexión.');
-      //   return;
-      // }
+      if (!resultado.correcto) {
+        this.mensaje.set(resultado.error ?? 'No se pudo guardar la conexión.');
+        return;
+      }
 
-      // this.guardado.emit();
+      this.guardado.emit();
     } catch (error) {
       console.error('Error al guardar bd.config:', error);
       this.mensaje.set('Ocurrió un error al guardar la conexión.');

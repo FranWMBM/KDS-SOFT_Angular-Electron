@@ -96,21 +96,21 @@ export class Pantalla implements OnInit {
     this.mensaje.set(null);
 
     try {
-      // const resultado = await window.electronAPI.guardarPantalla({
-      //   filasTicket: Number(this.formulario.value.filasTicket),
-      //   columnasPorPagina: Number(this.formulario.value.columnasPorPagina),
-      //   filasPorPagina: Number(this.formulario.value.filasPorPagina),
-      //   monitorCocina: Number(this.formulario.value.monitorCocina),
-      //   imagenMarcaAgua: this.imagenPreview(),
-      // });
+      const resultado = await window.electronAPI.guardarPantalla({
+        filasTicket: Number(this.formulario.value.filasTicket),
+        columnasPorPagina: Number(this.formulario.value.columnasPorPagina),
+        filasPorPagina: Number(this.formulario.value.filasPorPagina),
+        monitorCocina: Number(this.formulario.value.monitorCocina),
+        imagenMarcaAgua: this.imagenPreview(),
+      });
 
-      // if (resultado.correcto) {
-      //   this.router.navigate(['/pantalla-comandas']);
-      // } else {
-      //   this.mensaje.set(
-      //     resultado.error ?? 'No se pudo guardar la pantalla.',
-      //   );
-      // }
+      if (resultado.correcto) {
+        this.router.navigate(['/pantalla-comandas']);
+      } else {
+        this.mensaje.set(
+          resultado.error ?? 'No se pudo guardar la pantalla.',
+        );
+      }
     } catch (error) {
       console.error('Error al guardar config.json:', error);
       this.mensaje.set('Ocurrió un error al guardar la pantalla.');

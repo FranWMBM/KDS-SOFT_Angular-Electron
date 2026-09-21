@@ -69,6 +69,28 @@
           <span class="error">Debe haber al menos 1 fila.</span>
         }
       </div>
+
+      <div class="campo">
+        <label for="tamanoLetraDescripcion">Tamaño de letra del producto (px)</label>
+
+        <input
+          id="tamanoLetraDescripcion"
+          type="number"
+          min="8"
+          max="40"
+          formControlName="tamanoLetraDescripcion"
+        />
+
+        <span class="ayuda">Entre 8 y 40</span>
+
+        @if (formulario.get('tamanoLetraDescripcion')?.touched && formulario.get('tamanoLetraDescripcion')?.hasError('required')) {
+          <span class="error">Este campo es obligatorio.</span>
+        }
+
+        @if (formulario.get('tamanoLetraDescripcion')?.touched && (formulario.get('tamanoLetraDescripcion')?.hasError('min') || formulario.get('tamanoLetraDescripcion')?.hasError('max'))) {
+          <span class="error">Debe estar entre 8 y 40.</span>
+        }
+      </div>
     </div>
   </section>
 
@@ -143,6 +165,28 @@
           <span class="icono-imagen" aria-hidden="true">🖼</span>
           <span>Sin imagen seleccionada</span>
         </div>
+      }
+    </div>
+
+    <div class="campo campo-tamano-marca-agua">
+      <label for="tamanoMarcaAgua">Tamaño de la marca de agua (px)</label>
+
+      <input
+        id="tamanoMarcaAgua"
+        type="number"
+        min="60"
+        max="800"
+        formControlName="tamanoMarcaAgua"
+      />
+
+      <span class="ayuda">Ancho en píxeles, entre 60 y 800</span>
+
+      @if (formulario.get('tamanoMarcaAgua')?.touched && formulario.get('tamanoMarcaAgua')?.hasError('required')) {
+        <span class="error">Este campo es obligatorio.</span>
+      }
+
+      @if (formulario.get('tamanoMarcaAgua')?.touched && (formulario.get('tamanoMarcaAgua')?.hasError('min') || formulario.get('tamanoMarcaAgua')?.hasError('max'))) {
+        <span class="error">Debe estar entre 60 y 800.</span>
       }
     </div>
   </section>

@@ -1,11 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
-interface MonitorCocina {
-  id: number;
-  nombre: string;
-}
+import { firstValueFrom } from 'rxjs';
+import { BackendService, MonitorCocina } from '../../../servicios/BackendService';
+import { ConfiguracionPantallaLocal } from '../../../servicios/ConfiguracionPantallaLocal';
 
 @Component({
   selector: 'app-pantalla',
@@ -16,6 +14,8 @@ interface MonitorCocina {
 export class Pantalla implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly backend = inject(BackendService);
+  private readonly configuracionLocal = inject(ConfiguracionPantallaLocal);
 
   readonly imagenPreview = signal<string | null>(null);
   readonly guardando = signal(false);
@@ -29,27 +29,31 @@ export class Pantalla implements OnInit {
     filasTicket: [7, [Validators.required, Validators.min(5)]],
     columnasPorPagina: [3, [Validators.required, Validators.min(3)]],
     filasPorPagina: [1, [Validators.required, Validators.min(1)]],
-    monitorCocina: [null as number | null, Validators.required],
+    monitorCocina: [null as string | null, Validators.required],
+    tamanoMarcaAgua: [320, [Validators.required, Validators.min(60), Validators.max(800)]],
+    tamanoLetraDescripcion: [16, [Validators.required, Validators.min(8), Validators.max(40)]],
   });
 
   async ngOnInit(): Promise<void> {
-    if (!window.electronAPI) return;
-
     try {
-      // const datos = await window.electronAPI.obtenerPantalla();
+      const datos = this.configuracionLocal.obtener();
 
-      // if (datos) {
-      //   this.formulario.patchValue({
-      //     filasTicket: datos.filasTicket,
-      //     columnasPorPagina: datos.columnasPorPagina,
-      //     filasPorPagina: datos.filasPorPagina,
-      //     monitorCocina: datos.monitorCocina,
-      //   });
+      if (datos) {
+        this.formulario.patchValue({
+          filasTicket: datos.filasTicket,
+          columnasPorPagina: datos.columnasPorPagina,
+          filasPorPagina: datos.filasPorPagina,
+          monitorCocina: datos.monitorCocina,
+          // "?? valor por defecto" cubre configuraciones guardadas antes de
+          // que existieran estos dos campos.
+          tamanoMarcaAgua: datos.tamanoMarcaAgua ?? 320,
+          tamanoLetraDescripcion: datos.tamanoLetraDescripcion ?? 16,
+        });
 
-      //   this.imagenPreview.set(datos.imagenMarcaAgua ?? null);
-      // }
+        this.imagenPreview.set(datos.imagenMarcaAgua ?? null);
+      }
     } catch (error) {
-      console.error('No se pudo leer config.json:', error);
+      console.error('No se pudo leer la configuración de pantalla:', error);
       this.mensaje.set('No se pudo cargar la configuración de pantalla.');
     }
 
@@ -57,16 +61,14 @@ export class Pantalla implements OnInit {
   }
 
   async cargarMonitores(): Promise<void> {
-    if (!window.electronAPI) return;
-
     this.cargandoMonitores.set(true);
     this.errorMonitores.set(null);
     this.monitores = [];
 
     try {
-      this.monitores = await window.electronAPI.obtenerMonitores();
+      this.monitores = await firstValueFrom(this.backend.obtenerMonitores());
 
-      const seleccionado = Number(this.formulario.value.monitorCocina);
+      const seleccionado = this.formulario.value.monitorCocina;
 
       if (
         seleccionado &&
@@ -90,18 +92,18 @@ export class Pantalla implements OnInit {
       return;
     }
 
-    if (!window.electronAPI) return;
-
     this.guardando.set(true);
     this.mensaje.set(null);
 
     try {
-      const resultado = await window.electronAPI.guardarPantalla({
+      const resultado = this.configuracionLocal.guardar({
         filasTicket: Number(this.formulario.value.filasTicket),
         columnasPorPagina: Number(this.formulario.value.columnasPorPagina),
         filasPorPagina: Number(this.formulario.value.filasPorPagina),
-        monitorCocina: Number(this.formulario.value.monitorCocina),
+        monitorCocina: this.formulario.value.monitorCocina!,
         imagenMarcaAgua: this.imagenPreview(),
+        tamanoMarcaAgua: Number(this.formulario.value.tamanoMarcaAgua),
+        tamanoLetraDescripcion: Number(this.formulario.value.tamanoLetraDescripcion),
       });
 
       if (resultado.correcto) {
@@ -112,7 +114,7 @@ export class Pantalla implements OnInit {
         );
       }
     } catch (error) {
-      console.error('Error al guardar config.json:', error);
+      console.error('Error al guardar la configuración de pantalla:', error);
       this.mensaje.set('Ocurrió un error al guardar la pantalla.');
     } finally {
       this.guardando.set(false);

@@ -122,7 +122,7 @@
 }
 
 .marca-agua img {
-  width: clamp(180px, 25vw, 500px);
+  width: var(--marca-agua-ancho, clamp(180px, 25vw, 500px));
 
   max-height: 45vh;
 

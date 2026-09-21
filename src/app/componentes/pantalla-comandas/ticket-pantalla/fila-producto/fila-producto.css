@@ -54,7 +54,7 @@
   display: flex;
   align-items: center;
 
-  font-size: clamp(10px, 0.85vw, 18px);
+  font-size: var(--tamano-descripcion, clamp(10px, 0.85vw, 18px));
 
   font-weight: bold;
 

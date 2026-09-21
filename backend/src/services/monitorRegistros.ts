@@ -1,12 +1,13 @@
-const { obtenerNuevosRegistros, limpiarRegistrosProcesados } = require('../database/consultas');
+import { obtenerNuevosRegistros, limpiarRegistrosProcesados } from '../database/consultas';
+import { FuncionBroadcast } from '../tipos';
 
-let mainWindow = null;
+let enviarRegistros: FuncionBroadcast | null = null;
 let activo = false;
-let temporizador = null;
-let consultaEnCurso = null;
+let temporizador: ReturnType<typeof setTimeout> | null = null;
+let consultaEnCurso: Promise<void> | null = null;
 let generacion = 0;
 
-async function consultar() {
+async function consultar(): Promise<void> {
   if (!activo || consultaEnCurso) return;
 
   const generacionDeEstaConsulta = generacion;
@@ -18,9 +19,8 @@ async function consultar() {
       // Si se detuvo mientras esperaba a la BD, descarta el resultado.
       if (!activo || generacionDeEstaConsulta !== generacion) return;
 
-      if (registros.length > 0 && mainWindow && !mainWindow.isDestroyed()) {
-        //console.log('Nuevos registros:', registros);
-        mainWindow.webContents.send('nuevos-registros', registros);
+      if (registros.length > 0 && enviarRegistros) {
+        enviarRegistros(registros);
       }
     } catch (error) {
       console.error('Error consultando nuevos registros:', error);
@@ -39,7 +39,7 @@ async function consultar() {
   }
 }
 
-async function iniciarMonitor(ventana) {
+export async function iniciarMonitor(broadcast: FuncionBroadcast): Promise<void> {
   if (activo) return;
 
   const generacionAlIniciar = generacion;
@@ -51,14 +51,14 @@ async function iniciarMonitor(ventana) {
 
   if (generacionAlIniciar !== generacion) return;
 
-  mainWindow = ventana;
+  enviarRegistros = broadcast;
   activo = true;
   console.log('Monitor de registros iniciado');
 
   consultar();
 }
 
-async function detenerMonitor() {
+export async function detenerMonitor(): Promise<void> {
   activo = false;
   generacion++;
 
@@ -76,13 +76,7 @@ async function detenerMonitor() {
   console.log('Monitor de registros detenido');
 }
 
-async function reiniciarMonitor(ventana = mainWindow) {
+export async function reiniciarMonitor(broadcast: FuncionBroadcast = enviarRegistros!): Promise<void> {
   await detenerMonitor();
-  await iniciarMonitor(ventana);
+  await iniciarMonitor(broadcast);
 }
-
-module.exports = {
-  iniciarMonitor,
-  detenerMonitor,
-  reiniciarMonitor,
-};

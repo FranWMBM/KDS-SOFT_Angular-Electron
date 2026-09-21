@@ -1,5 +1,7 @@
 import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
+import { BackendService } from '../../../servicios/BackendService';
 
 @Component({
   selector: 'app-base-datos',
@@ -7,8 +9,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   templateUrl: './base-datos.html',
   styleUrl: './base-datos.css',
 })
-export class BaseDatos {
+export class BaseDatos implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly backend = inject(BackendService);
 
   readonly guardado = output<void>();
   readonly mostrarContrasena = signal(false);
@@ -23,15 +26,13 @@ export class BaseDatos {
   });
 
   async ngOnInit(): Promise<void> {
-    if (!window.electronAPI) return;
-
     try {
-      const datos = await window.electronAPI.obtenerBaseDatos();
+      const datos = await firstValueFrom(this.backend.obtenerBaseDatos());
       if (datos) {
         this.formulario.patchValue(datos);
       }
     } catch (error) {
-      console.error('No se pudo leer bd.config:', error);
+      console.error('No se pudo leer la configuración de base de datos:', error);
       this.mensaje.set('No se pudo cargar la conexión guardada.');
     }
   }
@@ -42,18 +43,18 @@ export class BaseDatos {
       return;
     }
 
-    if (!window.electronAPI) return;
-
     this.guardando.set(true);
     this.mensaje.set(null);
 
     try {
-      const resultado = await window.electronAPI.guardarBaseDatos({
-        servidor: this.formulario.value.servidor!.trim(),
-        baseDatos: this.formulario.value.baseDatos!.trim(),
-        usuario: this.formulario.value.usuario!.trim(),
-        contrasena: this.formulario.value.contrasena!,
-      });
+      const resultado = await firstValueFrom(
+        this.backend.guardarBaseDatos({
+          servidor: this.formulario.value.servidor!.trim(),
+          baseDatos: this.formulario.value.baseDatos!.trim(),
+          usuario: this.formulario.value.usuario!.trim(),
+          contrasena: this.formulario.value.contrasena!,
+        }),
+      );
 
       if (!resultado.correcto) {
         this.mensaje.set(resultado.error ?? 'No se pudo guardar la conexión.');
@@ -62,7 +63,7 @@ export class BaseDatos {
 
       this.guardado.emit();
     } catch (error) {
-      console.error('Error al guardar bd.config:', error);
+      console.error('Error al guardar la configuración de base de datos:', error);
       this.mensaje.set('Ocurrió un error al guardar la conexión.');
     } finally {
       this.guardando.set(false);

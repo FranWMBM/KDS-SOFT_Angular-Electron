@@ -15,6 +15,8 @@ export class ConfigService {
   columnas = 6;
   filas = 1;
   columnasPorPagina = this.columnas * this.filas;
+  tamanoMarcaAgua = 320;
+  tamanoLetraDescripcion = 16;
 
   public paginaActual = signal(0);
 
@@ -25,7 +27,11 @@ export class ConfigService {
     this.filasPorTicket = configuraciones.filasTicket;
     this.columnas = configuraciones.columnasPorPagina;
     this.filas = configuraciones.filasPorPagina;
-    this.columnasPorPagina = this.columnas * this.filas;  
+    this.columnasPorPagina = this.columnas * this.filas;
+    // "?? valor por defecto" cubre configuraciones guardadas antes de que
+    // existieran estos dos campos.
+    this.tamanoMarcaAgua = configuraciones.tamanoMarcaAgua ?? 320;
+    this.tamanoLetraDescripcion = configuraciones.tamanoLetraDescripcion ?? 16;
   }
 
   public seleccionarComanda(comanda: ComandaModel | undefined): void {

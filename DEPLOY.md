@@ -1,0 +1,225 @@
+# Guía de instalación en producción (desde cero)
+
+Esta guía asume Windows, que es donde corre hoy el sistema. Cubre la
+instalación completa: el servidor central (backend + SQL Server) y cada
+pantalla KDS del restaurante.
+
+Antes de empezar, repasa la arquitectura en el [README](README.md#arquitectura):
+**una sola instancia del backend** corre en la LAN, y cada pantalla KDS
+(navegador o Electron) se conecta a esa misma URL.
+
+## 0. Qué máquina hace qué
+
+- **Servidor** (una sola PC/servidor en la red del restaurante, con línea de
+  red hacia el SQL Server): corre el backend Node. Puede ser la misma
+  máquina donde está SQL Server o cualquier otra PC de la LAN.
+- **Pantallas KDS** (una por estación de cocina): abren un navegador o el
+  shell de Electron apuntando a la IP del servidor. No necesitan Node ni
+  acceso directo a SQL Server.
+
+## 1. Preparar el servidor
+
+### 1.1 Requisitos
+
+- Windows con acceso de red al SQL Server del restaurante.
+- [Node.js LTS](https://nodejs.org/) instalado (incluye `npm`).
+- Git (o simplemente copiar la carpeta del proyecto por USB/red).
+
+### 1.2 Obtener el proyecto
+
+```powershell
+git clone <url-del-repositorio> C:\KDS-SR
+cd C:\KDS-SR
+```
+
+(O copia la carpeta del proyecto ya existente si no usas Git en el servidor.)
+
+### 1.3 Instalar dependencias y compilar el frontend
+
+```powershell
+npm install
+npm run build
+```
+
+Esto genera `dist/KDS-SR/browser`, que es lo que el backend va a servir.
+
+### 1.4 Configurar el backend
+
+```powershell
+cd backend
+npm install
+Copy-Item .env.example .env
+```
+
+Edita `backend/.env` y define:
+
+```
+PORT=3000
+CONFIG_SECRET=<una-frase-larga-y-unica-de-al-menos-32-caracteres>
+```
+
+`CONFIG_SECRET` cifra las credenciales de SQL Server guardadas en
+`backend/data/bd.config`. **Anótalo en un lugar seguro**: si lo cambias más
+adelante, el backend ya no podrá leer la conexión guardada y habrá que
+volver a cargarla desde la pantalla de configuración.
+
+El backend está en TypeScript; `npm run backend` (paso 1.5) lo compila solo
+antes de arrancar. Si en algún momento quieres compilarlo a mano:
+
+```powershell
+cd backend
+npm run build   # genera backend/dist/*.js
+```
+
+### 1.5 Probar que arranca
+
+```powershell
+cd C:\KDS-SR
+npm run backend
+```
+
+Deberías ver `Backend KDS-SR escuchando en http://localhost:3000`. Abre esa
+URL en un navegador de la misma PC para confirmar que carga la app. Detenlo
+con `Ctrl+C` una vez confirmado; en el paso 1.7 lo dejamos corriendo como
+servicio.
+
+### 1.6 Abrir el puerto en el Firewall de Windows
+
+Para que las demás pantallas de la LAN puedan llegar al backend:
+
+```powershell
+New-NetFirewallRule -DisplayName "KDS-SR Backend" -Direction Inbound -Protocol TCP -LocalPort 3000 -Action Allow
+```
+
+### 1.7 Dejarlo corriendo siempre (servicio de Windows)
+
+Recomendado: [NSSM](https://nssm.cc/) para que el backend arranque solo con
+Windows y se reinicie si se cae. Como NSSM llama a `node.exe` directamente
+(sin pasar por npm), primero hay que compilar una vez:
+
+```powershell
+cd C:\KDS-SR\backend
+npm run build
+
+# Descarga nssm.exe y colócalo en el PATH, luego:
+nssm install KDS-SR-Backend "C:\Program Files\nodejs\node.exe" "C:\KDS-SR\backend\dist\server.js"
+nssm set KDS-SR-Backend AppDirectory "C:\KDS-SR\backend"
+nssm start KDS-SR-Backend
+```
+
+Verifica el estado con `nssm status KDS-SR-Backend`, o revisa en
+`services.msc` que "KDS-SR-Backend" esté "En ejecución".
+
+> Alternativa sin instalar nada aparte: dejar la ventana de
+> `npm run backend` abierta y minimizada, y agregar un acceso directo a esa
+> misma carpeta en la carpeta de inicio de Windows
+> (`shell:startup`). Menos robusto (no se reinicia solo si falla), pero
+> funciona para una primera puesta en marcha.
+
+### 1.8 Averigua la IP del servidor
+
+```powershell
+ipconfig
+```
+
+Anota la IPv4 (ej. `192.168.1.50`). Todas las pantallas KDS usarán
+`http://192.168.1.50:3000`.
+
+## 2. Configurar la conexión a SQL Server (una sola vez)
+
+Desde cualquier navegador de la LAN:
+
+1. Ve a `http://<ip-del-servidor>:3000/configuracion`.
+2. En la pestaña **Base de datos**, ingresa servidor, base de datos, usuario
+   y contraseña del SQL Server del restaurante, y guarda.
+3. Pasa a la pestaña **Pantalla** — aquí ya deberían listarse los monitores
+   de cocina si la conexión fue exitosa.
+
+Esta configuración queda guardada centralmente en el servidor
+(`backend/data/bd.config`, cifrado): no hace falta repetirla en cada
+pantalla.
+
+## 3. Configurar cada pantalla KDS
+
+La configuración de **pantalla** (filas, columnas, qué monitor de cocina
+mostrar, marca de agua) es local a cada dispositivo — se guarda en el
+navegador de esa PC, así que este paso sí se repite en cada estación.
+
+### Opción A — Navegador en modo kiosco (más simple)
+
+1. Abre Chrome/Edge en la PC de la pantalla KDS.
+2. Navega a `http://<ip-del-servidor>:3000`.
+3. Ve a **Configuración → Pantalla**, define filas/columnas y elige el
+   monitor de cocina que corresponde a esa estación, guarda.
+4. Para que arranque automáticamente en pantalla completa al prender la PC,
+   crea un acceso directo con el navegador en modo kiosco, por ejemplo:
+
+   ```
+   "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk --app=http://192.168.1.50:3000
+   ```
+
+   y colócalo en la carpeta de inicio de Windows (`shell:startup`) de esa
+   PC.
+
+### Opción B — Shell de Electron (ventana dedicada)
+
+Si prefieres una app de escritorio en vez de un navegador:
+
+1. Copia la carpeta del proyecto (o solo `electron/` + `node_modules` con
+   Electron instalado) a la PC de la pantalla.
+2. Edita `electron/host.config.json` con la IP real del servidor:
+
+   ```json
+   { "backendUrl": "http://192.168.1.50:3000" }
+   ```
+
+3. Instala Electron y ejecútalo:
+
+   ```powershell
+   npm install
+   npm run electron
+   ```
+
+4. Igual que en la opción A, configura filas/columnas/monitor desde
+   **Configuración → Pantalla** dentro de esa ventana.
+5. Para que arranque solo al iniciar Windows, crea un acceso directo a
+   `npm run electron` (o al `.exe` si luego se empaqueta con
+   `electron-builder`) en `shell:startup`.
+
+## 4. Verificación final
+
+- Abre dos pantallas KDS a la vez y confirma que ambas reciben las mismas
+  comandas nuevas casi al instante (WebSocket).
+- Apaga y prende el servidor: el backend debe volver a levantar solo (si
+  configuraste NSSM) y las pantallas deben reconectarse solas al WebSocket
+  en unos segundos.
+- Revisa `backend/data/` — debe existir `bd.config`, nunca debe subirse a
+  Git (ya está en `.gitignore`).
+
+## 5. Actualizar la app a futuro
+
+Desde el servidor:
+
+```powershell
+cd C:\KDS-SR
+git pull
+npm install
+npm run build
+cd backend
+npm install
+npm run build
+nssm restart KDS-SR-Backend
+```
+
+Las pantallas KDS no necesitan actualizarse manualmente: al recargar el
+navegador (o reiniciar el shell de Electron) obtienen el build nuevo, porque
+lo sirve el backend.
+
+## 6. Problemas comunes
+
+| Síntoma | Causa probable |
+|---|---|
+| Una pantalla no carga nada | No llega al servidor: revisa la IP, que el firewall tenga la regla del paso 1.6, y que ambas PCs estén en la misma red/VLAN. |
+| "Primero configura la conexión a la base de datos" | Falta hacer el paso 2 (Base de datos) desde `/configuracion`. |
+| Al reiniciar el backend, pide de nuevo las credenciales de SQL | Cambiaste `CONFIG_SECRET` en `.env` después de haberlas guardado. Vuelve a cargarlas desde `/configuracion`. |
+| Las pantallas no reciben comandas nuevas | Revisa que el backend siga corriendo (`nssm status KDS-SR-Backend`) y que no haya un firewall bloqueando WebSockets en el puerto 3000. |

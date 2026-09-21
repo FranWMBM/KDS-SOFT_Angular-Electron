@@ -1,0 +1,189 @@
+/* =========================
+   BUMPBAR
+   ========================= */
+
+.BumpBar {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  /* Separación proporcional */
+  gap: clamp(5px, 0.55vw, 14px);
+
+  /* Evita que los botones toquen los bordes */
+  padding: clamp(4px, 0.4vw, 10px);
+
+  box-sizing: border-box;
+
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      #f9d88f 0%,
+      #fce7b9 12%,
+      rgba(255, 245, 220, 0.7) 28%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 100% 0%,
+      #f8d681 0%,
+      #fce5b3 13%,
+      rgba(255, 245, 220, 0.65) 30%,
+      transparent 52%
+    ),
+    radial-gradient(
+      circle at 0% 100%,
+      #f9d98f 0%,
+      #fce8bd 15%,
+      rgba(255, 245, 220, 0.6) 30%,
+      transparent 52%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      #f9d98f 0%,
+      #fce8bd 15%,
+      rgba(255, 245, 220, 0.6) 30%,
+      transparent 52%
+    ),
+    #fffdf9;
+
+  overflow: hidden;
+}
+
+.bump {
+  /*
+    El ancho crece según la ventana,
+    con mínimo y máximo.
+  */
+  width: clamp(90px, 8vw, 170px);
+
+  /*
+    El botón aprovecha proporcionalmente
+    la altura disponible del BumpBar.
+  */
+  height: clamp(42px, 7vh, 75px);
+
+  padding: clamp(2px, 0.25vw, 5px);
+
+  border: clamp(1px, 0.1vw, 2px) solid black;
+
+  border-radius: clamp(6px, 0.55vw, 12px);
+
+  box-sizing: border-box;
+  overflow: hidden;
+
+  background: #244224;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: clamp(1px, 0.2vh, 4px);
+
+  cursor: pointer;
+
+  /*
+    Hace más suave el efecto al presionar.
+  */
+  transition:
+    transform 0.1s ease,
+    background-color 0.1s ease;
+}
+
+/* =========================
+   BOTONES
+   ========================= */
+
+.boton {
+  /*
+    El ancho crece según la ventana,
+    con mínimo y máximo.
+  */
+  width: clamp(90px, 8vw, 170px);
+
+  /*
+    El botón aprovecha proporcionalmente
+    la altura disponible del BumpBar.
+  */
+  height: clamp(42px, 7vh, 75px);
+
+  padding: clamp(2px, 0.25vw, 5px);
+
+  border: clamp(1px, 0.1vw, 2px) solid #d5a21a;
+
+  border-radius: clamp(6px, 0.55vw, 12px);
+
+  box-sizing: border-box;
+  overflow: hidden;
+
+  background: linear-gradient(to bottom, #f5b62b 0%, #f7c84b 55%, #f6ce5b 100%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: clamp(1px, 0.2vh, 4px);
+
+  cursor: pointer;
+
+  /*
+    Hace más suave el efecto al presionar.
+  */
+  transition:
+    transform 0.1s ease,
+    background-color 0.1s ease;
+}
+
+/* =========================
+   IMAGEN DEL BOTÓN
+   ========================= */
+
+.boton img {
+  width: clamp(28px, 2.8vw, 55px);
+  height: clamp(25px, 4.5vh, 48px);
+
+  object-fit: contain;
+
+  display: block;
+}
+
+/* =========================
+   TEXTO DEL BOTÓN
+   ========================= */
+
+.bump span {
+  font-size: clamp(20px, 0.75vw, 16px);
+  color: white;
+  font-weight: bold;
+
+  line-height: 1;
+
+  text-align: center;
+
+  white-space: nowrap;
+}
+
+/* =========================
+   BOTÓN PRESIONADO
+   ========================= */
+
+.boton:active {
+  background: #4caf50;
+
+  color: white;
+
+  transform: scale(0.95);
+}
+
+.boton:disabled,
+.bump:disabled {
+  background: transparent;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.4;
+}

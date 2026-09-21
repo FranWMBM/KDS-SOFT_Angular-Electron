@@ -1,0 +1,89 @@
+<form [formGroup]="formulario" (ngSubmit)="guardar()">
+  <form [formGroup]="formulario" (ngSubmit)="guardar()">
+    <section class="seccion">
+      <div class="titulo-seccion">
+        <h2>Base de datos</h2>
+        <p>Credenciales de conexión a SQL Server</p>
+      </div>
+
+      <div class="grid">
+        <div class="campo campo-grande">
+          <label for="servidor">Servidor</label>
+
+          <input
+            id="servidor"
+            type="text"
+            formControlName="servidor"
+            placeholder="Ej. 192.168.1.10\SQLEXPRESS"
+          />
+
+          @if (formulario.get('servidor')?.touched && formulario.get('servidor')?.invalid) {
+            <span class="error">El servidor es obligatorio.</span>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="baseDatos">Base de datos</label>
+
+          <input id="baseDatos" type="text" formControlName="baseDatos" placeholder="Ej. KDS" />
+
+          @if (formulario.get('baseDatos')?.touched && formulario.get('baseDatos')?.invalid) {
+            <span class="error">La base de datos es obligatoria.</span>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="usuario">Usuario</label>
+
+          <input
+            id="usuario"
+            type="text"
+            formControlName="usuario"
+            autocomplete="username"
+            placeholder="Usuario SQL"
+          />
+
+          @if (formulario.get('usuario')?.touched && formulario.get('usuario')?.invalid) {
+            <span class="error">El usuario es obligatorio.</span>
+          }
+        </div>
+
+        <div class="campo campo-grande">
+          <label for="contrasena">Contraseña</label>
+
+          <div class="campo-contrasena">
+            <input
+              id="contrasena"
+              [type]="mostrarContrasena() ? 'text' : 'password'"
+              formControlName="contrasena"
+              autocomplete="current-password"
+              placeholder="Contraseña"
+            />
+
+            <button type="button" class="boton-contrasena" (click)="cambiarVisibilidadContrasena()">
+              {{ mostrarContrasena() ? 'Ocultar' : 'Ver' }}
+            </button>
+          </div>
+
+          @if (formulario.get('contrasena')?.touched && formulario.get('contrasena')?.invalid) {
+            <span class="error">La contraseña es obligatoria.</span>
+          }
+        </div>
+      </div>
+    </section>
+
+    @if (mensaje()) {
+      <p class="error" role="alert">{{ mensaje() }}</p>
+    }
+
+    <div class="acciones">
+      <button type="submit" class="boton guardar" [disabled]="guardando()">
+        {{ guardando() ? 'Guardando...' : 'Guardar conexión' }}
+      </button>
+    </div>
+  </form>
+
+  @if (mensaje()) {
+    <p class="error">{{ mensaje() }}</p>
+  }
+</form>

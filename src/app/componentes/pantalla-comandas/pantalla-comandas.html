@@ -1,0 +1,49 @@
+<div class="marca-agua">
+  @if (imagenMarcaAgua(); as imagen) {
+    <img [src]="imagen" alt="Marca de agua" />
+  }
+</div>
+<div class="kds">
+  <!-- FILA 1: ENCABEZADO -->
+  <header class="encabezado">
+    <div class="nombre-area">EXPO</div>
+
+    <div class="total-comandas">
+      Comandas en preparación:
+      <span>5</span>
+    </div>
+  </header>
+
+  <!-- FILA 2: ÁREA DE COMANDAS -->
+  <main
+    class="area-comandas"
+    [style.grid-template-columns]="'repeat(' + svrConfig.columnas + ', 1fr)'"
+    [style.grid-template-rows]="'repeat(' + svrConfig.filas + ', 1fr)'"
+  >
+    @for (ticket of srvNavegacion.columnasVisibles(); track $index) {
+      <app-ticket-pantalla
+        [columna]="ticket.columna"
+        [comanda]="ticket.comanda"
+        [seleccionado]="ticket.columna.seleccionado()"
+        (productoSeleccionado)="onProductoSeleccionado($event)"
+      />
+    }
+  </main>
+
+  <!-- FILA 3: BUMP BAR
+  <footer class="bump-bar">
+    <button class="btn-bump">BUMP</button>
+    <span>
+
+    Página
+    {{ srvComandas.paginaActual() + 1 }}
+
+    de
+
+    {{ srvComandas.totalPaginas() }}
+
+  </span>
+  </footer> -->
+
+  <app-bump-bar></app-bump-bar>
+</div>

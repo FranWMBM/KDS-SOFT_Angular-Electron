@@ -1,0 +1,25 @@
+<div class="ticket" [class.seleccion]="seleccionado()">
+  <div class="seleccion-ticket"></div>
+  <div
+    class="comanda"
+    [class.primera]="columna()?.esPrimera"
+    [class.continuacion]="!columna()?.esPrimera"
+    [style.grid-template-rows]="
+      'repeat(' + (columna()!.cantidadFilas + (columna()!.esPrimera ? 2 : 0)) + ', minmax(0, 1fr))'
+    "
+  >
+    @if (columna()?.esPrimera) {
+      <app-encabezado class="encabezado-ticket" [folio]="comanda().idComanda" />
+    }
+
+    <div
+      class="contenedor-filas"
+      [style.grid-row]="'span ' + columna()!.cantidadFilas"
+      [style.grid-template-rows]="'repeat(' + columna()!.cantidadFilas + ', minmax(0, 1fr))'"
+    >
+      @for (prod of columna()?.displays; track $index) {
+        <app-fila-producto [datos]="prod" />
+      }
+    </div>
+  </div>
+</div>

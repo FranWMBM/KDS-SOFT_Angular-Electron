@@ -1,0 +1,227 @@
+:host {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* =====================================
+   ENCABEZADO COMPLETO
+   ===================================== */
+
+.encabezado-comanda {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  display: grid;
+
+  /*
+    El encabezado tiene dos secciones
+    y se dividen proporcionalmente.
+  */
+  grid-template-rows:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  background: white;
+
+  border: 1px solid #222;
+
+  overflow: hidden;
+}
+
+/* =====================================
+   PRINCIPAL
+   ===================================== */
+
+.encabezado-principal {
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  padding: clamp(2px, 0.25vh, 5px) clamp(5px, 0.6vw, 12px);
+
+  background: #222;
+
+  color: white;
+
+  overflow: hidden;
+}
+
+/* =====================================
+   FOLIO
+   ===================================== */
+
+.folio {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  min-width: 0;
+  min-height: 0;
+
+  gap: clamp(1px, 0.1vh, 2px);
+}
+
+.folio-label {
+  font-size: clamp(7px, 0.5vw, 11px);
+
+  font-weight: bold;
+
+  color: #bbbbbb;
+
+  text-transform: uppercase;
+
+  line-height: 1;
+}
+
+.folio-numero {
+  font-size: clamp(14px, 1.25vw, 24px);
+
+  font-weight: bold;
+
+  line-height: 1;
+}
+
+/* =====================================
+   MESA
+   ===================================== */
+
+.mesa {
+  min-width: 0;
+
+  text-align: right;
+}
+
+.mesa-label {
+  font-size: clamp(7px, 0.5vw, 11px);
+
+  color: #bbbbbb;
+
+  text-transform: uppercase;
+
+  line-height: 1;
+}
+
+.mesa-numero {
+  font-size: clamp(14px, 1.25vw, 24px);
+
+  font-weight: bold;
+
+  line-height: 1;
+}
+
+/* =====================================
+   SECUNDARIO
+   ===================================== */
+
+.encabezado-secundario {
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: clamp(3px, 0.3vw, 6px);
+
+  padding: clamp(2px, 0.2vh, 4px) clamp(5px, 0.6vw, 12px);
+
+  background: #f5f5f5;
+
+  border-top: 1px solid #ddd;
+
+  overflow: hidden;
+}
+
+/* =====================================
+   MESERO
+   ===================================== */
+
+.mesero {
+  display: flex;
+
+  align-items: center;
+
+  min-width: 0;
+
+  gap: clamp(2px, 0.3vw, 6px);
+
+  font-size: clamp(9px, 0.75vw, 15px);
+
+  font-weight: bold;
+
+  color: #333;
+
+  overflow: hidden;
+}
+
+.mesero span {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.icono-mesero {
+  font-size: clamp(11px, 0.9vw, 18px);
+
+  flex-shrink: 0;
+}
+
+/* =====================================
+   TIPO CUENTA
+   ===================================== */
+
+.tipo-cuenta {
+  padding: clamp(1px, 0.15vh, 3px) clamp(4px, 0.45vw, 9px);
+
+  border-radius: clamp(6px, 0.7vw, 14px);
+
+  font-size: clamp(7px, 0.55vw, 12px);
+
+  font-weight: bold;
+
+  text-transform: uppercase;
+
+  line-height: 1;
+
+  white-space: nowrap;
+
+  flex-shrink: 0;
+}
+
+.tipo-comedor {
+  background: #d8f3dc;
+  color: #1b5e20;
+}
+
+.tipo-domicilio {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.tipo-rapido {
+  background: #dbeafe;
+  color: #1e40af;
+}

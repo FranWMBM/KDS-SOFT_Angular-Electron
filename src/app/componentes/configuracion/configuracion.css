@@ -1,0 +1,102 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.configuracion {
+  min-height: 100vh;
+  padding: 35px 50px;
+  background: gray;
+  color: #111;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.encabezado {
+  margin-bottom: 25px;
+}
+
+.encabezado h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.encabezado p {
+  margin: 8px 0 0;
+  color: #20206b;
+  font-size: 15px;
+}
+
+.pestanas {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+  border-bottom: 2px solid #292929;
+}
+
+.pestanas button {
+  padding: 12px 20px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: #222;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pestanas button:hover {
+  background: rgb(255 255 255 / 20%);
+}
+
+.pestanas button.activa {
+  border-bottom-color: #ff7a00;
+  color: #000;
+}
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.boton {
+  min-height: 46px;
+  padding: 0 25px;
+  border: 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secundario {
+  background: #252525;
+  color: white;
+}
+
+.secundario:hover {
+  background: #383838;
+}
+
+@media (max-width: 900px) {
+  .configuracion {
+    padding: 25px;
+  }
+}
+
+@media (max-width: 600px) {
+  .configuracion {
+    padding: 18px;
+  }
+
+  .pestanas button {
+    flex: 1;
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+}

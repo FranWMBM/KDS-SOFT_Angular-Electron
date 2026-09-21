@@ -1,0 +1,172 @@
+/* =========================
+   HOST
+   ========================= */
+
+:host {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+/* .ticket {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+
+  background: #fff;
+
+  box-sizing: border-box;
+}
+
+
+.ticket.seleccion {
+  border:
+    clamp(2px, 0.25vw, 5px)
+    solid blue;
+} */
+
+.ticket {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+
+  background: #fff;
+  box-sizing: border-box;
+}
+
+/* Capa de selección */
+.seleccion-ticket {
+  position: absolute;
+  inset: 0;
+
+  z-index: 10;
+
+  background-color: rgba(0, 70, 255, 0.4);
+
+  pointer-events: none;
+
+  /* Oculta cuando el ticket no está seleccionado */
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity 150ms ease,
+    visibility 150ms ease;
+}
+
+/* Mostrar capa solamente cuando está seleccionado */
+.ticket.seleccion .seleccion-ticket {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =========================
+   COMANDA
+   ========================= */
+
+.comanda {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  display: grid;
+
+  /*
+    TODO el ticket está dividido
+    exactamente en 20 espacios.
+  */
+  grid-template-rows: repeat(20, minmax(0, 1fr));
+
+  background: #fff;
+
+  overflow: hidden;
+}
+
+/* =========================
+   PRIMERA COLUMNA
+   ========================= */
+
+/*
+  El encabezado utiliza exactamente
+  2 de las 20 filas.
+*/
+.comanda.primera .encabezado-ticket {
+  grid-row: span 2;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+/*
+  Quedan 18 espacios para productos.
+*/
+.comanda.primera .contenedor-filas {
+  grid-row: span 18;
+
+  display: grid;
+
+  grid-template-rows: repeat(18, minmax(0, 1fr));
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+/* =========================
+   COLUMNA CONTINUACIÓN
+   ========================= */
+
+/*
+  Al no existir encabezado,
+  dispone de los 20 espacios.
+*/
+.comanda.continuacion .contenedor-filas {
+  grid-row: span 20;
+
+  display: grid;
+
+  grid-template-rows: repeat(20, minmax(0, 1fr));
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+/* =========================
+   FILA PRODUCTO ANGULAR
+   ========================= */
+
+app-fila-producto {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}

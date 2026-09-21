@@ -1,0 +1,220 @@
+:host {
+  display: block;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.seccion {
+  margin-bottom: 20px;
+  padding: 25px;
+  border: 1px solid #292929;
+  border-radius: 12px;
+  background: #f8d681;
+}
+
+.titulo-seccion {
+  margin-bottom: 22px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #20206b;
+}
+
+.titulo-seccion h2 {
+  margin: 0 0 6px;
+  font-size: 19px;
+}
+
+.titulo-seccion p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.tres-columnas {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.campo label {
+  color: #292929;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.campo input,
+.campo select {
+  width: 100%;
+  height: 44px;
+  padding: 0 13px;
+  border: 1px solid #333;
+  border-radius: 7px;
+  outline: none;
+  background: white;
+  color: black;
+  font-size: 14px;
+}
+
+.campo input:focus,
+.campo select:focus {
+  border-color: #ff7a00;
+  box-shadow: 0 0 0 2px rgb(255 122 0 / 20%);
+}
+
+.campo select:disabled {
+  background: #e6e6e6;
+  color: #555;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #a31313;
+  font-size: 12px;
+}
+
+.ayuda {
+  color: #555;
+  font-size: 11px;
+}
+
+/* Marca de agua */
+
+.marca-agua {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 20px;
+}
+
+.campo-tamano-marca-agua {
+  max-width: 260px;
+}
+
+.selector-imagen input {
+  display: none;
+}
+
+.selector-imagen span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid #3b3b3b;
+  border-radius: 7px;
+  background: white;
+  cursor: pointer;
+}
+
+.selector-imagen span:hover {
+  background: #eee;
+}
+
+.preview,
+.sin-imagen {
+  width: 180px;
+  height: 110px;
+  border-radius: 8px;
+}
+
+.preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #333;
+  background: #0d0d0d;
+}
+
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.quitar-imagen {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 80%);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.sin-imagen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px dashed #555;
+  background: #f3e4b8;
+  color: #444;
+  font-size: 12px;
+}
+
+.icono-imagen {
+  font-size: 28px;
+}
+
+/* Acciones */
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+}
+
+.boton {
+  min-height: 46px;
+  padding: 0 25px;
+  border: 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.guardar {
+  background: #ff7a00;
+  color: white;
+}
+
+.guardar:hover:not(:disabled) {
+  background: #d96500;
+}
+
+.boton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+@media (max-width: 900px) {
+  .grid,
+  .tres-columnas {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .marca-agua {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

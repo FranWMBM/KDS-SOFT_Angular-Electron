@@ -144,19 +144,24 @@ navegador de esa PC, así que este paso sí se repite en cada estación.
 
 ### Opción A — Navegador en modo kiosco (más simple)
 
-1. Abre Chrome/Edge en la PC de la pantalla KDS.
-2. Navega a `http://<ip-del-servidor>:3000`.
-3. Ve a **Configuración**, define filas/columnas y elige el
+1. Abre Chrome/Edge normal en la PC de la pantalla KDS (no en modo kiosco
+   todavía) y navega a `http://<ip-del-servidor>:3000`.
+2. Ve a **Configuración**, define filas/columnas y elige el
    monitor de cocina que corresponde a esa estación, guarda.
-4. Para que arranque automáticamente en pantalla completa al prender la PC,
-   crea un acceso directo con el navegador en modo kiosco, por ejemplo:
+3. Copia [`iniciar-kiosco.bat`](iniciar-kiosco.bat) a esa PC y edita la
+   línea `set KDS_URL=...` con la IP real del servidor, por ejemplo:
 
-   ```
-   "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk --app=http://192.168.1.50:3000
+   ```bat
+   set KDS_URL=http://192.168.1.50:3000
    ```
 
-   y colócalo en la carpeta de inicio de Windows (`shell:startup`) de esa
-   PC.
+   Al ejecutarlo abre Edge (o Chrome si no hay Edge) en pantalla completa,
+   sin barra de navegador ni pestañas — apunta a `--edge-kiosk-type=fullscreen`
+   para Edge, que si no se especifica abre un modo kiosco distinto
+   (de navegación pública, con varias pestañas).
+4. Para que arranque solo al prender la PC, coloca un acceso directo a
+   `iniciar-kiosco.bat` en la carpeta de inicio de Windows (`shell:startup`)
+   de esa PC.
 
 ### Opción B — Shell de Electron (ventana dedicada)
 

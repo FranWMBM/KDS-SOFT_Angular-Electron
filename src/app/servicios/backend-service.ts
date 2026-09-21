@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, filter, map, take, timeout } from 'rxjs';
-import { ConfiguracionBaseDatos, ResultadoGuardado } from '../interfaces/configuracion';
 import { ProductoMonitor } from '../interfaces/productos-en-produccion';
 
 export interface MonitorCocina {
@@ -19,11 +18,11 @@ interface MensajeEntrante {
 const RETRASO_RECONEXION_MS = 2000;
 const TIEMPO_ESPERA_RESPUESTA_MS = 10000;
 
-// Todo (config de base de datos, monitores, registros) viaja por este único
-// WebSocket. Se manda {id, accion, datos} y el backend responde
-// {id, evento, datos} con el mismo id, para saber qué respuesta es de qué
-// pedido. La API REST (backend/routes/config.js) queda de reserva por si
-// hace falta en el futuro, pero el frontend ya no la usa.
+// Todo (monitores, registros) viaja por este único WebSocket. Se manda
+// {id, accion, datos} y el backend responde {id, evento, datos} con el
+// mismo id, para saber qué respuesta es de qué pedido. Las credenciales de
+// SQL Server ya no se piden por acá: se declaran directamente en
+// backend/.env (ver sembrarCredencialesDesdeEnv en configuracion-store.ts).
 @Injectable({
   providedIn: 'root',
 })
@@ -44,14 +43,6 @@ export class BackendService {
 
   constructor() {
     this.conectarWebSocket();
-  }
-
-  obtenerBaseDatos(): Observable<ConfiguracionBaseDatos | null> {
-    return this.enviarSolicitud('obtener-base-datos');
-  }
-
-  guardarBaseDatos(datos: ConfiguracionBaseDatos): Observable<ResultadoGuardado> {
-    return this.enviarSolicitud('guardar-base-datos', datos);
   }
 
   obtenerMonitores(): Observable<MonitorCocina[]> {
@@ -101,7 +92,7 @@ export class BackendService {
     this.socket.addEventListener('message', (evento) => {
       const mensaje = JSON.parse(evento.data as string) as MensajeEntrante;
 
-      // Respuesta a una solicitud puntual (obtener-base-datos, etc.).
+      // Respuesta a una solicitud puntual (obtener-monitores, etc.).
       if (mensaje.id) {
         this.mensajes$.next(mensaje);
         return;

@@ -5,7 +5,9 @@ function obtenerConfiguracionSQL(): sql.config {
   const configuracion = obtenerBaseDatos();
 
   if (!configuracion) {
-    throw new Error('Primero configura la conexión a la base de datos.');
+    throw new Error(
+      'Define DB_SERVIDOR, DB_BASE_DATOS, DB_USUARIO y DB_CONTRASENA en backend/.env antes de arrancar el backend.',
+    );
   }
 
   return {

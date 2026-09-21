@@ -4,29 +4,7 @@
     <p>Configuración general del monitor de cocina</p>
   </div>
 
-  <nav class="pestanas" aria-label="Secciones de configuración">
-    <button
-      type="button"
-      [class.activa]="pestanaActiva() === 'baseDatos'"
-      (click)="pestanaActiva.set('baseDatos')"
-    >
-      Base de datos
-    </button>
-
-    <button
-      type="button"
-      [class.activa]="pestanaActiva() === 'pantalla'"
-      (click)="pestanaActiva.set('pantalla')"
-    >
-      Pantalla y monitor
-    </button>
-  </nav>
-
-  @if (pestanaActiva() === 'baseDatos') {
-    <app-base-datos (guardado)="conexionGuardada()" />
-  } @else {
-    <app-pantalla />
-  }
+  <app-pantalla />
 
   <div class="acciones">
     <button type="button" class="boton secundario" (click)="cerrarConfiguracion()">Salir</button>

@@ -31,33 +31,6 @@
   font-size: 15px;
 }
 
-.pestanas {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 22px;
-  border-bottom: 2px solid #292929;
-}
-
-.pestanas button {
-  padding: 12px 20px;
-  border: 0;
-  border-bottom: 3px solid transparent;
-  background: transparent;
-  color: #222;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.pestanas button:hover {
-  background: rgb(255 255 255 / 20%);
-}
-
-.pestanas button.activa {
-  border-bottom-color: #ff7a00;
-  color: #000;
-}
-
 .acciones {
   display: flex;
   justify-content: flex-end;
@@ -92,11 +65,5 @@
 @media (max-width: 600px) {
   .configuracion {
     padding: 18px;
-  }
-
-  .pestanas button {
-    flex: 1;
-    padding: 12px 8px;
-    font-size: 13px;
   }
 }

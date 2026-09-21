@@ -56,12 +56,23 @@ Edita `backend/.env` y define:
 ```
 PORT=3000
 CONFIG_SECRET=<una-frase-larga-y-unica-de-al-menos-32-caracteres>
+DB_SERVIDOR=<ip-o-nombre-del-servidor-de-sql-server>
+DB_BASE_DATOS=<nombre-de-la-base-de-datos>
+DB_USUARIO=<usuario-de-sql-server>
+DB_CONTRASENA=<contraseña>
 ```
 
-`CONFIG_SECRET` cifra las credenciales de SQL Server guardadas en
-`backend/data/bd.config`. **Anótalo en un lugar seguro**: si lo cambias más
-adelante, el backend ya no podrá leer la conexión guardada y habrá que
-volver a cargarla desde la pantalla de configuración.
+`CONFIG_SECRET` cifra las credenciales de SQL Server que el backend guarda
+en `backend/data/bd.config` al arrancar. **Anótalo en un lugar seguro**: si
+lo cambias más adelante, el backend ya no podrá leer la conexión guardada y
+volverá a tomar los valores de `DB_SERVIDOR`/`DB_BASE_DATOS`/`DB_USUARIO`/
+`DB_CONTRASENA` de este mismo archivo.
+
+Las credenciales de SQL Server (`DB_SERVIDOR`, `DB_BASE_DATOS`,
+`DB_USUARIO`, `DB_CONTRASENA`) ya no se configuran desde la app — se
+declaran acá, una sola vez, en el servidor. Si en algún momento cambian
+(nueva contraseña, otro servidor), edita estas cuatro líneas y reinicia el
+backend (`nssm restart KDS-SR-Backend`, ver paso 1.7).
 
 El backend está en TypeScript; `npm run backend` (paso 1.5) lo compila solo
 antes de arrancar. Si en algún momento quieres compilarlo a mano:
@@ -125,21 +136,7 @@ ipconfig
 Anota la IPv4 (ej. `192.168.1.50`). Todas las pantallas KDS usarán
 `http://192.168.1.50:3000`.
 
-## 2. Configurar la conexión a SQL Server (una sola vez)
-
-Desde cualquier navegador de la LAN:
-
-1. Ve a `http://<ip-del-servidor>:3000/configuracion`.
-2. En la pestaña **Base de datos**, ingresa servidor, base de datos, usuario
-   y contraseña del SQL Server del restaurante, y guarda.
-3. Pasa a la pestaña **Pantalla** — aquí ya deberían listarse los monitores
-   de cocina si la conexión fue exitosa.
-
-Esta configuración queda guardada centralmente en el servidor
-(`backend/data/bd.config`, cifrado): no hace falta repetirla en cada
-pantalla.
-
-## 3. Configurar cada pantalla KDS
+## 2. Configurar cada pantalla KDS
 
 La configuración de **pantalla** (filas, columnas, qué monitor de cocina
 mostrar, marca de agua) es local a cada dispositivo — se guarda en el
@@ -149,7 +146,7 @@ navegador de esa PC, así que este paso sí se repite en cada estación.
 
 1. Abre Chrome/Edge en la PC de la pantalla KDS.
 2. Navega a `http://<ip-del-servidor>:3000`.
-3. Ve a **Configuración → Pantalla**, define filas/columnas y elige el
+3. Ve a **Configuración**, define filas/columnas y elige el
    monitor de cocina que corresponde a esa estación, guarda.
 4. Para que arranque automáticamente en pantalla completa al prender la PC,
    crea un acceso directo con el navegador en modo kiosco, por ejemplo:
@@ -181,12 +178,12 @@ Si prefieres una app de escritorio en vez de un navegador:
    ```
 
 4. Igual que en la opción A, configura filas/columnas/monitor desde
-   **Configuración → Pantalla** dentro de esa ventana.
+   **Configuración** dentro de esa ventana.
 5. Para que arranque solo al iniciar Windows, crea un acceso directo a
    `npm run electron` (o al `.exe` si luego se empaqueta con
    `electron-builder`) en `shell:startup`.
 
-## 4. Verificación final
+## 3. Verificación final
 
 - Abre dos pantallas KDS a la vez y confirma que ambas reciben las mismas
   comandas nuevas casi al instante (WebSocket).
@@ -196,7 +193,7 @@ Si prefieres una app de escritorio en vez de un navegador:
 - Revisa `backend/data/` — debe existir `bd.config`, nunca debe subirse a
   Git (ya está en `.gitignore`).
 
-## 5. Actualizar la app a futuro
+## 4. Actualizar la app a futuro
 
 Desde el servidor:
 
@@ -215,11 +212,11 @@ Las pantallas KDS no necesitan actualizarse manualmente: al recargar el
 navegador (o reiniciar el shell de Electron) obtienen el build nuevo, porque
 lo sirve el backend.
 
-## 6. Problemas comunes
+## 5. Problemas comunes
 
 | Síntoma | Causa probable |
 |---|---|
 | Una pantalla no carga nada | No llega al servidor: revisa la IP, que el firewall tenga la regla del paso 1.6, y que ambas PCs estén en la misma red/VLAN. |
-| "Primero configura la conexión a la base de datos" | Falta hacer el paso 2 (Base de datos) desde `/configuracion`. |
-| Al reiniciar el backend, pide de nuevo las credenciales de SQL | Cambiaste `CONFIG_SECRET` en `.env` después de haberlas guardado. Vuelve a cargarlas desde `/configuracion`. |
+| "Define DB_SERVIDOR, DB_BASE_DATOS, ... en backend/.env" | Faltan (o están vacías) las variables `DB_*` en `backend/.env` (paso 1.4). Complétalas y reinicia el backend. |
+| El backend no toma una credencial nueva que acabas de cambiar en `.env` | Hace falta reiniciar el backend (`nssm restart KDS-SR-Backend`) para que relea `backend/.env`. |
 | Las pantallas no reciben comandas nuevas | Revisa que el backend siga corriendo (`nssm status KDS-SR-Backend`) y que no haya un firewall bloqueando WebSockets en el puerto 3000. |

@@ -61,3 +61,24 @@ export function obtenerBaseDatos(): ConfiguracionBaseDatos | null {
 
   return JSON.parse(descifrar(cifrado)) as ConfiguracionBaseDatos;
 }
+
+// Las credenciales ya no se cargan desde la app: se declaran en
+// backend/.env (DB_SERVIDOR, DB_BASE_DATOS, DB_USUARIO, DB_CONTRASENA) y el
+// backend las cifra y guarda al arrancar, igual que antes hacía el
+// formulario de "Base de datos".
+export function sembrarCredencialesDesdeEnv(): void {
+  const { DB_SERVIDOR, DB_BASE_DATOS, DB_USUARIO, DB_CONTRASENA } = process.env;
+
+  if (!DB_SERVIDOR || !DB_BASE_DATOS || !DB_USUARIO || !DB_CONTRASENA) {
+    return;
+  }
+
+  guardarBaseDatos({
+    servidor: DB_SERVIDOR,
+    baseDatos: DB_BASE_DATOS,
+    usuario: DB_USUARIO,
+    contrasena: DB_CONTRASENA,
+  });
+
+  console.log('Credenciales de SQL Server cargadas desde backend/.env');
+}

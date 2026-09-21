@@ -7,12 +7,8 @@ import { WebSocket, WebSocketServer } from 'ws';
 
 import { crearRouterConfig } from './routes/config';
 import { iniciarMonitor } from './services/monitorRegistros';
-import {
-  accionObtenerBaseDatos,
-  accionGuardarBaseDatos,
-  accionObtenerMonitores,
-  accionObtenerRegistros,
-} from './acciones';
+import { sembrarCredencialesDesdeEnv } from './configuracion-store';
+import { accionObtenerMonitores, accionObtenerRegistros } from './acciones';
 import { MensajeEntrante, ProductoMonitor } from './tipos';
 
 const PUERTO = process.env['PORT'] || 3000;
@@ -68,21 +64,6 @@ wss.on('connection', (cliente) => {
 
     try {
       switch (accion) {
-        case 'obtener-base-datos':
-          responder(cliente, id, 'base-datos', accionObtenerBaseDatos());
-          break;
-
-        case 'guardar-base-datos':
-          responder(
-            cliente,
-            id,
-            'guardado-base-datos',
-            await accionGuardarBaseDatos(datos as any, (registros) =>
-              broadcast('nuevos-registros', registros),
-            ),
-          );
-          break;
-
         case 'obtener-monitores':
           responder(cliente, id, 'monitores', await accionObtenerMonitores());
           break;
@@ -109,6 +90,8 @@ app.use(express.static(CARPETA_BUILD_ANGULAR));
 app.get('*', (_req, res) => {
   res.sendFile(path.join(CARPETA_BUILD_ANGULAR, 'index.html'));
 });
+
+sembrarCredencialesDesdeEnv();
 
 servidorHttp.listen(PUERTO, () => {
   console.log(`Backend KDS-SR escuchando en http://localhost:${PUERTO}`);

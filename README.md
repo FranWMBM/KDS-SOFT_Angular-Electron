@@ -6,20 +6,24 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 La app tiene tres partes:
 
-- `src/` — el frontend Angular (comandas, configuración). No depende de
-  Electron: habla con el backend por un único WebSocket (`BackendService`),
-  tanto para pedir datos (config de base de datos, monitores, registros)
-  como para recibir los pedidos nuevos en vivo.
+- `src/` — el frontend Angular (comandas, configuración de pantalla). No
+  depende de Electron: habla con el backend por un único WebSocket
+  (`BackendService`), tanto para pedir datos (monitores, registros) como
+  para recibir los pedidos nuevos en vivo. Ya no configura la conexión a
+  SQL Server — eso se declara directamente en el backend (ver más abajo).
 - `backend/` — un servidor Node/Express en **TypeScript** (`backend/src/`,
-  compila a `backend/dist/`) que se conecta a SQL Server, guarda las
-  credenciales (cifradas) y atiende todo por WebSocket: el cliente manda
-  `{ id, accion, datos }` y el backend responde `{ id, evento, datos }` con
-  el mismo `id`. Los nuevos registros se transmiten a todas las pantallas
-  conectadas sin que nadie los pida (`nuevos-registros`). También sirve el
-  build de Angular como archivos estáticos, y expone además una API REST
-  equivalente (`backend/src/routes/config.ts`) que el frontend no usa hoy,
-  mantenida por si hace falta acceso por HTTP en el futuro (otra
-  integración, debugging).
+  compila a `backend/dist/`) que se conecta a SQL Server y atiende todo por
+  WebSocket: el cliente manda `{ id, accion, datos }` y el backend responde
+  `{ id, evento, datos }` con el mismo `id`. Los nuevos registros se
+  transmiten a todas las pantallas conectadas sin que nadie los pida
+  (`nuevos-registros`). También sirve el build de Angular como archivos
+  estáticos, y expone además una API REST equivalente
+  (`backend/src/routes/config.ts`) que el frontend no usa hoy, mantenida
+  por si hace falta acceso por HTTP en el futuro (otra integración,
+  debugging). Las credenciales de SQL Server se declaran en
+  `backend/.env` (`DB_SERVIDOR`, `DB_BASE_DATOS`, `DB_USUARIO`,
+  `DB_CONTRASENA`) y el backend las cifra y guarda en
+  `backend/data/bd.config` al arrancar — nunca se piden desde la app.
 - `electron/` — un shell delgado opcional para empaquetar una pantalla KDS
   como app de escritorio; solo abre una ventana apuntando a la URL del
   backend (`electron/host.config.json` o la variable `KDS_BACKEND_URL`).
@@ -70,22 +74,24 @@ cp .env.example .env
 cd ..
 ```
 
-Edita `backend/.env` y define un `CONFIG_SECRET` propio (una frase larga,
-mínimo 32 caracteres): cifra las credenciales de SQL Server que se guarden
-más adelante desde la app.
+Edita `backend/.env` y define:
+
+- `CONFIG_SECRET` — una frase propia, larga (mínimo 32 caracteres). Cifra
+  las credenciales de SQL Server al guardarlas.
+- `DB_SERVIDOR`, `DB_BASE_DATOS`, `DB_USUARIO`, `DB_CONTRASENA` — la
+  conexión a SQL Server del restaurante. El backend las lee de acá al
+  arrancar y las guarda cifradas en `backend/data/bd.config` (ya no se
+  configuran desde la app). Si cambias alguna, con reiniciar el backend
+  alcanza para que tome el valor nuevo.
 
 ### 5. Primer uso de la app
 
-Todavía no hay conexión a base de datos ni configuración de pantalla, así
-que la primera vez que abras la app:
+Con el backend ya conectado a SQL Server (paso 4), solo falta la
+configuración de pantalla, que es por dispositivo:
 
-1. Ve a **Configuración → Base de datos**, ingresa servidor, base de datos,
-   usuario y contraseña del SQL Server, y guarda. Esto se hace una sola vez
-   en el backend (queda cifrado en `backend/data/bd.config`), no por
-   pantalla.
-2. Ve a **Configuración → Pantalla**, elige el monitor de cocina y ajusta
-   filas/columnas/marca de agua para *ese* equipo — esto sí se guarda por
-   navegador (`localStorage`), y se repite en cada PC/pantalla nueva.
+Ve a **Configuración**, elige el monitor de cocina y ajusta
+filas/columnas/marca de agua para *ese* equipo — esto se guarda en el
+navegador (`localStorage`), y se repite en cada PC/pantalla nueva.
 
 ## Development server
 

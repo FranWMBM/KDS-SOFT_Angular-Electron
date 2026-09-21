@@ -11,13 +11,6 @@ export interface ConfiguracionPantalla {
   tamanoLetraDescripcion: number;
 }
 
-export interface ConfiguracionBaseDatos {
-  servidor: string;
-  baseDatos: string;
-  usuario: string;
-  contrasena: string;
-}
-
 export interface ResultadoGuardado {
   correcto: boolean;
   error?: string;

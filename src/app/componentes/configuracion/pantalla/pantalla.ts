@@ -91,11 +91,15 @@ export class Pantalla implements OnInit {
     this.mensaje.set(null);
 
     try {
+      const idMonitor = this.formulario.value.monitorCocina!;
+      const monitor = this.monitores.find((monitor) => monitor.id === idMonitor);
+
       const resultado = this.configuracionLocal.guardar({
         filasTicket: Number(this.formulario.value.filasTicket),
         columnasPorPagina: Number(this.formulario.value.columnasPorPagina),
         filasPorPagina: Number(this.formulario.value.filasPorPagina),
-        monitorCocina: this.formulario.value.monitorCocina!,
+        monitorCocina: idMonitor,
+        nombreMonitor: monitor?.nombre ?? null,
         imagenMarcaAgua: this.imagenPreview(),
         tamanoMarcaAgua: Number(this.formulario.value.tamanoMarcaAgua),
         tamanoLetraDescripcion: Number(this.formulario.value.tamanoLetraDescripcion),

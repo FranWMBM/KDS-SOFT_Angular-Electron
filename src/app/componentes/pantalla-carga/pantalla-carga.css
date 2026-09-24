@@ -1,0 +1,22 @@
+/* =========================
+   PANTALLA DE CARGA
+   ========================= */
+
+/* Cubre toda la ventana y bloquea los clics mientras está visible. */
+.PantallaCarga {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.45);
+  cursor: wait;
+}
+
+.PantallaCarga img {
+  width: clamp(80px, 10vw, 200px);
+  height: auto;
+}

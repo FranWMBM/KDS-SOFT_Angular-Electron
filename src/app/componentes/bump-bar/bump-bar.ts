@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
+import { CargandoService } from '../../servicios/cargando-service';
 import { NavegacionService } from '../../servicios/navegacion-service';
 import { BackendService } from '../../servicios/backend-service';
 import { ConfigService } from '../../servicios/config-service';
@@ -15,6 +17,7 @@ export class BumpBar {
   srvNavegacion = inject(NavegacionService);
   private readonly srvConfig = inject(ConfigService);
   private readonly srvBack = inject(BackendService);
+  private readonly srvCargando = inject(CargandoService);
 
   constructor(private router: Router) {}
 
@@ -30,32 +33,40 @@ export class BumpBar {
       idComanda: com.idComanda,
       movimientos: com.movimientos,
       estado: ESTADO_BUMPEADO,
+      idMonitor: this.srvConfig.idMonitor(),
     };
 
-    this.srvBack.bumpComanda(datos).subscribe({
-      next: (respuesta) => {
-        console.log('Respuesta del backend al bump:', respuesta);
+    this.srvCargando.mostrar();
 
-        const quedanProductos = com.eliminarProductos(respuesta.movimientos);
+    // finalize corre después de terminar next (quitar la comanda o
+    // redibujarla) o después de un error/timeout: solo ahí se quita la carga.
+    this.srvBack
+      .bumpComanda(datos)
+      .pipe(finalize(() => this.srvCargando.ocultar()))
+      .subscribe({
+        next: (respuesta) => {
+          console.log('Respuesta del backend al bump:', respuesta);
 
-        if (!quedanProductos) {
-          this.srvNavegacion.Bump();
-          return;
-        }
+          const quedanProductos = com.eliminarProductos(respuesta.movimientos);
 
-        com.redibujarColumnas();
-        // Los tickets cambiaron por dentro: se emite una lista nueva para
-        // que se recalculen las columnas visibles.
-        this.srvConfig.comandas.update((lista) => [...lista]);
+          if (!quedanProductos) {
+            this.srvNavegacion.Bump();
+            return;
+          }
 
-        // Los tickets son nuevos, hay que volver a marcarlos como seleccionados.
-        if (this.srvConfig.comandaSeleccionada === com) {
-          this.srvConfig.seleccionarComanda(com);
-        }
-      },
-      error: (error) =>
-        console.error(`No se pudo enviar el bump de la comanda ${com.idComanda}:`, error),
-    });
+          com.redibujarColumnas();
+          // Los tickets cambiaron por dentro: se emite una lista nueva para
+          // que se recalculen las columnas visibles.
+          this.srvConfig.comandas.update((lista) => [...lista]);
+
+          // Los tickets son nuevos, hay que volver a marcarlos como seleccionados.
+          if (this.srvConfig.comandaSeleccionada === com) {
+            this.srvConfig.seleccionarComanda(com);
+          }
+        },
+        error: (error) =>
+          console.error(`No se pudo enviar el bump de la comanda ${com.idComanda}:`, error),
+      });
 
     console.log(datos);
   }

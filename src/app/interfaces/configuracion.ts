@@ -4,6 +4,8 @@ export interface ConfiguracionPantalla {
   filasPorPagina: number;
   // idmonitor es varchar(5) en la base de datos (ej. "01", "02"), no numérico.
   monitorCocina: string | null;
+  // Se guarda junto al id para poder mostrarlo sin volver a pedir los monitores.
+  nombreMonitor: string | null;
   imagenMarcaAgua: string | null;
   /** Ancho de la marca de agua, en píxeles. */
   tamanoMarcaAgua: number;

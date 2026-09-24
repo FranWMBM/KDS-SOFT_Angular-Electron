@@ -72,7 +72,9 @@ wss.on('connection', (cliente) => {
           responder(cliente, id, 'registros-actuales', accionObtenerRegistros());
           break;
         case 'bump':
-          responder(cliente, id, 'respuesta-bump', datos)
+          // TEMPORAL: retraso para poder ver la pantalla de carga. Quitar después.
+          await new Promise((resolver) => setTimeout(resolver, 5000));
+          responder(cliente, id, 'respuesta-bump', datos);
           console.log(datos);
           break;
       }

@@ -18,7 +18,13 @@ export class ConfigService {
 
   public paginaActual = signal(0);
 
+  // Monitor elegido en Configuración; null mientras no se haya guardado uno.
+  public readonly idMonitor = signal<string | null>(null);
+  public readonly nombreMonitor = signal<string | null>(null);
+
   public asignarConfiguracion(configuraciones: ConfiguracionPantalla): void {
+    this.idMonitor.set(configuraciones.monitorCocina ?? null);
+    this.nombreMonitor.set(configuraciones.nombreMonitor ?? null);
     this.paginaActual.set(0);
     this.comandas.set([]);
     this.comandaSeleccionada = undefined;

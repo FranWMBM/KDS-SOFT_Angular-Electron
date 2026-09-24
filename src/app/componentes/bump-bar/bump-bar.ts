@@ -33,11 +33,30 @@ export class BumpBar {
     };
 
     this.srvBack.bumpComanda(datos).subscribe({
-      error: (error) => console.error(`No se pudo enviar el bump de la comanda ${com.idComanda}:`, error),
+      next: (respuesta) => {
+        console.log('Respuesta del backend al bump:', respuesta);
+
+        const quedanProductos = com.eliminarProductos(respuesta.movimientos);
+
+        if (!quedanProductos) {
+          this.srvNavegacion.Bump();
+          return;
+        }
+
+        com.redibujarColumnas();
+        // Los tickets cambiaron por dentro: se emite una lista nueva para
+        // que se recalculen las columnas visibles.
+        this.srvConfig.comandas.update((lista) => [...lista]);
+
+        // Los tickets son nuevos, hay que volver a marcarlos como seleccionados.
+        if (this.srvConfig.comandaSeleccionada === com) {
+          this.srvConfig.seleccionarComanda(com);
+        }
+      },
+      error: (error) =>
+        console.error(`No se pudo enviar el bump de la comanda ${com.idComanda}:`, error),
     });
 
     console.log(datos);
-    // Se quita de pantalla sin esperar la respuesta del backend.
-    //this.srvNavegacion.Bump();
   }
 }

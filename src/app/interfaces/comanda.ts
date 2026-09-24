@@ -25,7 +25,7 @@ export class ComandaModel implements Comanda {
     this.guardarProducto(registro);
     this.columnaActual = this.crearColumna(true);
     this.tickets = [this.columnaActual];
-    this.columnaActual.agregarProducto(registro);
+    this.dibujarProducto(registro);
   }
 
   private crearColumna(primera: boolean): ColumnaModel {
@@ -34,7 +34,11 @@ export class ComandaModel implements Comanda {
   }
 
   agregarDisplays(producto: ProductoMonitor): void {
-    if(this.guardarProducto(producto) === false) return;
+    if (!this.guardarProducto(producto)) return;
+    this.dibujarProducto(producto);
+  }
+
+  private dibujarProducto(producto: ProductoMonitor): void {
     const displaysPendientes = this.columnaActual.agregarProducto(producto);
 
     if (displaysPendientes.length > 0) {
@@ -56,9 +60,28 @@ export class ComandaModel implements Comanda {
     this.productosPorMovimiento.set(movimiento, producto);
     return true;
   }
-  
-  public get movimientos(): number[]{
+
+  public get movimientos(): number[] {
     return [...this.productosPorMovimiento.keys()];
   }
-  
+
+  // Devuelve true si todavía quedan productos en la comanda.
+  public eliminarProductos(movimientos: number[]): boolean {
+    for (const mov of movimientos) {
+      this.productosPorMovimiento.delete(mov);
+    }
+
+    return this.productosPorMovimiento.size > 0;
+  }
+
+  // Vuelve a armar las columnas desde cero con los productos que quedan
+  // (el Map conserva el orden en que se agregaron).
+  public redibujarColumnas(): void {
+    this.columnaActual = this.crearColumna(true);
+    this.tickets = [this.columnaActual];
+
+    for (const producto of this.productosPorMovimiento.values()) {
+      this.dibujarProducto(producto);
+    }
+  }
 }

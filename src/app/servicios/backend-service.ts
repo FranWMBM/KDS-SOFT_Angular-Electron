@@ -51,7 +51,7 @@ export class BackendService {
     return this.enviarSolicitud('obtener-registros');
   }
 
-  bumpComanda(datos: RegistrosBumpeados): Observable<void> {
+  bumpComanda(datos: RegistrosBumpeados): Observable<RegistrosBumpeados> {
     return this.enviarSolicitud('bump', datos);
   }
 

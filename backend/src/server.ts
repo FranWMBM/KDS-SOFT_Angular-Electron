@@ -71,6 +71,10 @@ wss.on('connection', (cliente) => {
         case 'obtener-registros':
           responder(cliente, id, 'registros-actuales', accionObtenerRegistros());
           break;
+        case 'bump':
+          responder(cliente, id, 'respuesta-bump', datos)
+          console.log(datos);
+          break;
       }
     } catch (error) {
       console.error(`Error procesando la acción "${accion}":`, error);

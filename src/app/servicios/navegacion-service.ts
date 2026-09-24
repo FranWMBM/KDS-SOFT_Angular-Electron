@@ -103,13 +103,15 @@ export class NavegacionService {
     this.configService.seleccionarComanda(this.comandasVisibles()[total - 1]);
   }
 
-  public Bump(): void {
-    const seleccionada = this.seleccion;
-    if (!seleccionada) return;
+  public Bump(bumpeada: ComandaModel | undefined = this.seleccion): void {
+    if (!bumpeada) return;
 
     this.configService.comandas.update((comandas) =>
-      comandas.filter((comanda) => comanda.idComanda !== seleccionada.idComanda),
+      comandas.filter((comanda) => comanda.idComanda !== bumpeada.idComanda),
     );
+
+    // Si el usuario ya movió la selección a otra comanda, se respeta.
+    if (bumpeada !== this.seleccion) return;
 
     this.configService.seleccionarComanda(undefined);
 

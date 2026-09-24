@@ -83,7 +83,7 @@ export class ComandasService {
             comanda = new ComandaModel(producto, this.svrConfig.filasPorTicket);
             comandas.push(comanda);
           } else {
-            comanda.agregarProducto(producto);
+            comanda.agregarDisplays(producto);
           }
         }
       }

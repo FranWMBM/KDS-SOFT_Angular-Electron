@@ -5,21 +5,24 @@ import { ProductoMonitor } from './productos-en-produccion';
 
 interface Comanda {
   idComanda: number;
-  productos: number[];
+  //movimientos: number[];
   tickets: ColumnaModel[];
 }
 
 export class ComandaModel implements Comanda {
   idComanda: number;
-  productos: number[];
+  //movimientos: number[];
   tickets: ColumnaModel[];
   filas = 20;
   columnaActual: ColumnaModel;
+  private productosPorMovimiento = new Map<number, ProductoMonitor>();
 
   constructor(registro: ProductoMonitor, filas: number) {
     this.idComanda = registro.folio;
     this.filas = filas;
-    this.productos = [registro.movimiento];
+    //this.movimientos = [registro.movimiento];
+    //this.agregarProducto(registro);
+    this.guardarProducto(registro);
     this.columnaActual = this.crearColumna(true);
     this.tickets = [this.columnaActual];
     this.columnaActual.agregarProducto(registro);
@@ -30,7 +33,8 @@ export class ComandaModel implements Comanda {
     return columna;
   }
 
-  agregarProducto(producto: ProductoMonitor): void {
+  agregarDisplays(producto: ProductoMonitor): void {
+    if(this.guardarProducto(producto) === false) return;
     const displaysPendientes = this.columnaActual.agregarProducto(producto);
 
     if (displaysPendientes.length > 0) {
@@ -41,4 +45,20 @@ export class ComandaModel implements Comanda {
       });
     }
   }
+
+  guardarProducto(producto: ProductoMonitor): boolean {
+    const movimiento = producto.movimiento;
+
+    if (this.productosPorMovimiento.has(movimiento)) {
+      return false; // Ya existe esa llave; no se reemplaza el producto
+    }
+
+    this.productosPorMovimiento.set(movimiento, producto);
+    return true;
+  }
+  
+  public get movimientos(): number[]{
+    return [...this.productosPorMovimiento.keys()];
+  }
+  
 }

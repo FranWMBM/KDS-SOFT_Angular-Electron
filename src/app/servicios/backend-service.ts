@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, filter, map, take, timeout } from 'rxjs';
 import { ProductoMonitor } from '../interfaces/productos-en-produccion';
+import { RegistrosBumpeados } from '../interfaces/registros-bumpeados';
 
 export interface MonitorCocina {
-  // idmonitor es varchar(5) en la base de datos (ej. "01", "02"), no numérico.
   id: string;
   nombre: string;
 }
@@ -20,9 +20,7 @@ const TIEMPO_ESPERA_RESPUESTA_MS = 10000;
 
 // Todo (monitores, registros) viaja por este único WebSocket. Se manda
 // {id, accion, datos} y el backend responde {id, evento, datos} con el
-// mismo id, para saber qué respuesta es de qué pedido. Las credenciales de
-// SQL Server ya no se piden por acá: se declaran directamente en
-// backend/.env (ver sembrarCredencialesDesdeEnv en configuracion-store.ts).
+// mismo id, para saber qué respuesta es de qué pedido.
 @Injectable({
   providedIn: 'root',
 })
@@ -51,6 +49,10 @@ export class BackendService {
 
   obtenerRegistrosActuales(): Observable<ProductoMonitor[]> {
     return this.enviarSolicitud('obtener-registros');
+  }
+
+  bumpComanda(datos: RegistrosBumpeados): Observable<void> {
+    return this.enviarSolicitud('bump', datos);
   }
 
   private enviarSolicitud<T>(accion: string, datos?: unknown): Observable<T> {

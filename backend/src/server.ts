@@ -8,7 +8,7 @@ import { WebSocket, WebSocketServer } from 'ws';
 import { crearRouterConfig } from './routes/config';
 import { iniciarMonitor } from './services/monitorRegistros';
 import { sembrarCredencialesDesdeEnv } from './configuracion-store';
-import { accionObtenerMonitores, accionObtenerRegistros } from './acciones';
+import { accionBump, accionObtenerMonitores, accionObtenerRegistros } from './acciones';
 import { MensajeEntrante, ProductoMonitor } from './tipos';
 
 const PUERTO = process.env['PORT'] || 3000;
@@ -52,6 +52,7 @@ wss.on('connection', (cliente) => {
   cliente.send(JSON.stringify({ evento: 'registros-actuales', datos: accionObtenerRegistros() }));
 
   cliente.on('message', async (mensajeCrudo) => {
+    const horaRecepcion = new Date();
     let mensaje: MensajeEntrante;
 
     try {
@@ -71,11 +72,11 @@ wss.on('connection', (cliente) => {
         case 'obtener-registros':
           responder(cliente, id, 'registros-actuales', accionObtenerRegistros());
           break;
+
         case 'bump':
           // TEMPORAL: retraso para poder ver la pantalla de carga. Quitar después.
-          await new Promise((resolver) => setTimeout(resolver, 5000));
-          responder(cliente, id, 'respuesta-bump', datos);
-          console.log(datos);
+          //await new Promise((resolver) => setTimeout(resolver, 5000));
+          responder(cliente, id, 'respuesta-bump', await accionBump(datos, horaRecepcion));
           break;
       }
     } catch (error) {

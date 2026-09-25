@@ -33,7 +33,7 @@ export class ColumnaModel {
   agregarProducto(producto: ProductoMonitor): Display[] {
     const displayProducto: Display = {
       descripcion: producto.descripcion,
-      tipo: producto.productocompuestoprincipal ? 'principal' : 'mod',
+      tipo: producto.modificador ? 'mod' : 'principal',
       movimiento: producto.movimiento,
     };
 

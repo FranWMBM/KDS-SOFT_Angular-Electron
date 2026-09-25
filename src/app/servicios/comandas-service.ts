@@ -53,8 +53,16 @@ export class ComandasService {
 
   AgregarRegistros(registros: ProductoMonitor[]) {
     const grupos = new Map<number, ProductoMonitor[]>();
+    const idMonitor = this.svrConfig.idMonitor()?.trim();
 
     for (const registro of registros) {
+      // Cada pantalla solo carga los productos de su monitor. Sin monitor
+      // configurado no se muestra nada. Se filtra antes de marcarlo como
+      // visto para que, si se cambia de monitor, resincronizar() lo cargue.
+      if (!idMonitor || registro.idmonitor?.trim() !== idMonitor) {
+        continue;
+      }
+
       const clave = `${registro.folio}-${registro.movimiento}`;
 
       if (this.registrosVistos.has(clave)) {

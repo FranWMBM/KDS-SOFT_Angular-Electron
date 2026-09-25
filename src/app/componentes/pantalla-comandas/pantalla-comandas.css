@@ -68,6 +68,13 @@
     #fffdf9;
 }
 
+.nombre-area, .total-comandas{
+  font-size: 40px;
+  font-weight: bold;
+  font-family: Arial;
+  color: #000;
+}
+
 /* =========================
    ÁREA DE COMANDAS
    ========================= */
@@ -112,7 +119,7 @@
 
   pointer-events: none;
 
-  opacity: 0.5;
+  opacity: var(--marca-agua-opacidad, 0.5);
 }
 
 .marca-agua img {

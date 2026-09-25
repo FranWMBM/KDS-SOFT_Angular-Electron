@@ -6,9 +6,10 @@
   <div
     [ngClass]="{
       principal: datos()?.tipo === 'principal',
+      mod: datos()?.tipo === 'mod',
       comentario: datos()?.tipo === 'comentario',
     }"
   >
-    [{{ datos()?.movimiento }}] {{ datos()?.descripcion }}
+    {{ datos()?.descripcion }}
   </div>
 </div>

@@ -201,6 +201,35 @@
           <span class="error">Debe estar entre 60 y 800.</span>
         }
       </div>
+
+      <div class="campo campo-tamano-marca-agua">
+        <label for="opacidadMarcaAgua">Opacidad de la marca de agua (%)</label>
+
+        <input
+          id="opacidadMarcaAgua"
+          type="number"
+          min="0"
+          max="100"
+          formControlName="opacidadMarcaAgua"
+        />
+
+        <span class="ayuda">0 es invisible y 100 es totalmente sólida</span>
+
+        @if (
+          formulario.get('opacidadMarcaAgua')?.touched &&
+          formulario.get('opacidadMarcaAgua')?.hasError('required')
+        ) {
+          <span class="error">Este campo es obligatorio.</span>
+        }
+
+        @if (
+          formulario.get('opacidadMarcaAgua')?.touched &&
+          (formulario.get('opacidadMarcaAgua')?.hasError('min') ||
+            formulario.get('opacidadMarcaAgua')?.hasError('max'))
+        ) {
+          <span class="error">Debe estar entre 0 y 100.</span>
+        }
+      </div>
     </section>
 
     @if (mensaje()) {

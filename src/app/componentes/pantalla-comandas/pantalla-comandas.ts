@@ -15,9 +15,10 @@ import { ConfiguracionPantallaLocal } from '../../servicios/configuracion-pantal
   host: {
     // Variables CSS heredadas por todo lo que está adentro (incluida
     // fila-producto, aunque quede varios componentes más abajo), para que
-    // el tamaño de la marca de agua y de la letra de producto sean
-    // configurables desde la pantalla de Configuración.
+    // el tamaño y la opacidad de la marca de agua y la letra de producto
+    // sean configurables desde la pantalla de Configuración.
     '[style.--marca-agua-ancho.px]': 'svrConfig.tamanoMarcaAgua',
+    '[style.--marca-agua-opacidad]': 'svrConfig.opacidadMarcaAgua / 100',
     '[style.--tamano-descripcion.px]': 'svrConfig.tamanoLetraDescripcion',
   },
 })

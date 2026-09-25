@@ -47,6 +47,9 @@ export class BumpBar {
         next: (respuesta) => {
           console.log('Respuesta del backend al bump:', respuesta);
 
+          // Solo se tocan los movimientos que el backend confirmó en la BD.
+          if (!respuesta?.movimientos?.length) return;
+
           const quedanProductos = com.eliminarProductos(respuesta.movimientos);
 
           if (!quedanProductos) {

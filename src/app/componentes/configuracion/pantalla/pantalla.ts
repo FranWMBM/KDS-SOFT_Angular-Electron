@@ -31,6 +31,7 @@ export class Pantalla implements OnInit {
     filasPorPagina: [1, [Validators.required, Validators.min(1)]],
     monitorCocina: [null as string | null, Validators.required],
     tamanoMarcaAgua: [320, [Validators.required, Validators.min(60), Validators.max(800)]],
+    opacidadMarcaAgua: [50, [Validators.required, Validators.min(0), Validators.max(100)]],
     tamanoLetraDescripcion: [16, [Validators.required, Validators.min(8), Validators.max(40)]],
   });
 
@@ -45,8 +46,9 @@ export class Pantalla implements OnInit {
           filasPorPagina: datos.filasPorPagina,
           monitorCocina: datos.monitorCocina,
           // "?? valor por defecto" cubre configuraciones guardadas antes de
-          // que existieran estos dos campos.
+          // que existieran estos campos.
           tamanoMarcaAgua: datos.tamanoMarcaAgua ?? 320,
+          opacidadMarcaAgua: datos.opacidadMarcaAgua ?? 50,
           tamanoLetraDescripcion: datos.tamanoLetraDescripcion ?? 16,
         });
 
@@ -102,6 +104,7 @@ export class Pantalla implements OnInit {
         nombreMonitor: monitor?.nombre ?? null,
         imagenMarcaAgua: this.imagenPreview(),
         tamanoMarcaAgua: Number(this.formulario.value.tamanoMarcaAgua),
+        opacidadMarcaAgua: Number(this.formulario.value.opacidadMarcaAgua),
         tamanoLetraDescripcion: Number(this.formulario.value.tamanoLetraDescripcion),
       });
 

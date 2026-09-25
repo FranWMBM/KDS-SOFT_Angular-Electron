@@ -50,3 +50,11 @@ export interface MensajeEntrante {
 }
 
 export type FuncionBroadcast = (registros: ProductoMonitor[]) => void;
+
+// Equivalente a RegistrosBumpeados del frontend. idComanda es el folio.
+export interface SolicitudBump {
+  idComanda: number;
+  movimientos: number[];
+  estado: number;
+  idMonitor: string | null;
+}

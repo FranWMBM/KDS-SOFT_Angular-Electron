@@ -14,6 +14,7 @@ export class ConfigService {
   filas = 1;
   columnasPorPagina = this.columnas * this.filas;
   tamanoMarcaAgua = 320;
+  opacidadMarcaAgua = 50;
   tamanoLetraDescripcion = 16;
 
   public paginaActual = signal(0);
@@ -33,8 +34,9 @@ export class ConfigService {
     this.filas = configuraciones.filasPorPagina;
     this.columnasPorPagina = this.columnas * this.filas;
     // "?? valor por defecto" cubre configuraciones guardadas antes de que
-    // existieran estos dos campos.
+    // existieran estos campos.
     this.tamanoMarcaAgua = configuraciones.tamanoMarcaAgua ?? 320;
+    this.opacidadMarcaAgua = configuraciones.opacidadMarcaAgua ?? 50;
     this.tamanoLetraDescripcion = configuraciones.tamanoLetraDescripcion ?? 16;
   }
 

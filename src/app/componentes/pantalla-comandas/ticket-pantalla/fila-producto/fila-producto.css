@@ -38,7 +38,9 @@
    ========================= */
 
 .principal {
+  /* background: #A9A9A9; */
   width: 100%;
+  color:blue;
 
   min-width: 0;
   min-height: 0;
@@ -50,13 +52,39 @@
   display: flex;
   align-items: center;
 
-  font-size: var(--tamano-descripcion, clamp(10px, 0.85vw, 18px));
+  font-size: var(--tamano-descripcion, clamp(20px, 0.85vw, 18px));
 
   font-weight: bold;
 
+  font-family: Consolas, Helvetica, sans-serif;
+
+  line-height: 1;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.mod{
+  width: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  margin-left: 20px;
+
+  padding: 0 clamp(4px, 0.55vw, 10px);
+
+  display: flex;
+  align-items: center;
+
+  font-size: var(--tamano-descripcion, clamp(20px, 0.85vw, 18px));
+
+  font-weight: normal;
+
   color: #000;
 
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Consolas, Helvetica, sans-serif;
 
   line-height: 1;
 
@@ -113,5 +141,5 @@
 
   flex-shrink: 0;
 
-  border-top: clamp(1px, 0.1vw, 2px) dashed #555;
+  border-top: clamp(3px, 0.1vw, 4px) dashed black;
 }

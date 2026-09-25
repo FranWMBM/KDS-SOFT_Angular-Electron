@@ -9,6 +9,8 @@ export interface ConfiguracionPantalla {
   imagenMarcaAgua: string | null;
   /** Ancho de la marca de agua, en píxeles. */
   tamanoMarcaAgua: number;
+  /** Opacidad de la marca de agua, en porcentaje (0 = invisible, 100 = sólida). */
+  opacidadMarcaAgua: number;
   /** Tamaño de letra de la descripción del producto en cada fila, en píxeles. */
   tamanoLetraDescripcion: number;
 }

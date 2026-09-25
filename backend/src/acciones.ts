@@ -1,5 +1,9 @@
 import { guardarBaseDatos, obtenerBaseDatos } from './configuracion-store';
-import { obtenerMonitores, obtenerTodosLosRegistrosConocidos } from './database/consultas';
+import {
+  bumpearMovimientos,
+  obtenerMonitores,
+  obtenerTodosLosRegistrosConocidos,
+} from './database/consultas';
 import { cerrarConexion } from './database/connection';
 import { reiniciarMonitor } from './services/monitorRegistros';
 import {
@@ -8,6 +12,7 @@ import {
   MonitorCocina,
   ProductoMonitor,
   ResultadoGuardado,
+  SolicitudBump,
 } from './tipos';
 
 // Lógica de negocio compartida entre el WebSocket (canal principal, ver
@@ -47,4 +52,41 @@ export async function accionObtenerMonitores(): Promise<MonitorCocina[]> {
 
 export function accionObtenerRegistros(): ProductoMonitor[] {
   return obtenerTodosLosRegistrosConocidos();
+}
+
+// Marca como producidos los movimientos del folio en el monitor indicado.
+// Lanza error (y el frontend no toca la pantalla) si los datos son
+// inválidos o si no se actualizó ningún movimiento.
+export async function accionBump(datos: unknown, horaRecepcion: Date): Promise<SolicitudBump> {
+  const solicitud = datos as Partial<SolicitudBump> | null;
+
+  if (
+    !solicitud ||
+    !Number.isInteger(solicitud.idComanda) ||
+    !Array.isArray(solicitud.movimientos) ||
+    solicitud.movimientos.length === 0 ||
+    !solicitud.movimientos.every(Number.isInteger)
+  ) {
+    throw new Error('Datos de bump inválidos.');
+  }
+
+  if (!solicitud.idMonitor) {
+    throw new Error('Esta pantalla no tiene un monitor configurado.');
+  }
+
+  const actualizados = await bumpearMovimientos(
+    solicitud.idComanda!,
+    solicitud.movimientos,
+    solicitud.idMonitor,
+    horaRecepcion,
+  );
+
+  if (actualizados.length === 0) {
+    throw new Error(
+      `No se bumpeó ningún movimiento del folio ${solicitud.idComanda} en el monitor ${solicitud.idMonitor}.`,
+    );
+  }
+
+  // Se responde solo con los movimientos que sí se actualizaron.
+  return { ...(solicitud as SolicitudBump), movimientos: actualizados };
 }
